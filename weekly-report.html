@@ -3,306 +3,691 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>나의 주간 업무 보고</title>
+<title>Chloe Works</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #ffffff; --bg2: #f8f8f6; --bg3: #f1efe8;
-    --text: #1a1a18; --text2: #666660; --text3: #aaa;
-    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
-    --radius: 8px; --radius-lg: 12px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a; --bg2: #252523; --bg3: #2c2c2a;
-      --text: #f0efe8; --text2: #aaa9a0; --text3: #666;
-      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
-    }
-  }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 24px 16px; }
-  .container { max-width: 680px; margin: 0 auto; }
-  h1 { font-size: 18px; font-weight: 500; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 10px; }
-  .week-badge { font-size: 12px; font-weight: 500; color: #3C3489; background: #EEEDFE; padding: 3px 10px; border-radius: 20px; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-  .filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
-  .tab { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 0.5px solid var(--border); background: transparent; color: var(--text2); cursor: pointer; }
-  .tab.active { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
-  .btn-write { font-size: 13px; padding: 6px 14px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: transparent; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 5px; }
-  .btn-write:hover { background: var(--bg2); }
-  .report-list { display: flex; flex-direction: column; gap: 10px; }
-  .report-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
-  .report-card:hover { border-color: var(--border2); }
-  .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; cursor: pointer; }
-  .cat-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-  .cat-qa { background: #E1F5EE; color: #085041; }
-  .cat-crm { background: #EEEDFE; color: #3C3489; }
-  .cat-van { background: #FAEEDA; color: #633806; }
-  .cat-etc { background: #F1EFE8; color: #444441; }
-  .card-date { font-size: 11px; color: var(--text3); }
-  .pills { display: flex; gap: 6px; flex-wrap: wrap; cursor: pointer; }
-  .pill { font-size: 11px; padding: 2px 8px; border-radius: 10px; display: flex; align-items: center; gap: 3px; }
-  .pill-done { background: #EAF3DE; color: #27500A; }
-  .pill-wip  { background: #E6F1FB; color: #0C447C; }
-  .pill-issue{ background: #FCEBEB; color: #791F1F; }
-  .pill-next { background: #FAEEDA; color: #633806; }
-  .preview { font-size: 12px; color: var(--text2); margin-top: 6px; line-height: 1.5; cursor: pointer; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .card-actions { display: flex; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--border); }
-  .btn-sm { font-size: 11px; padding: 3px 10px; border-radius: 6px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 4px; }
-  .btn-sm:hover { background: var(--bg2); }
-  .btn-sm.danger:hover { background: #FCEBEB; color: #791F1F; border-color: #F09595; }
-  .empty { text-align: center; padding: 3rem; color: var(--text3); font-size: 13px; line-height: 2; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sw:220px;
+  --bg:#fff;--bg2:#f4f4f2;--bg3:#ebebeb;
+  --text:#1a1a18;--text2:#666660;--text3:#aaa;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.18);
+  --accent:#534AB7;--abg:#EEEDFE;--atext:#3C3489;
+  --r:8px;--rl:12px;
+}
+body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;display:flex}
 
-  /* 모달 */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg); border-radius: 14px; border: 0.5px solid var(--border); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
-  .modal-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 1; }
-  .modal-title { font-size: 15px; font-weight: 500; }
-  .modal-close { background: none; border: none; cursor: pointer; color: var(--text2); font-size: 20px; line-height: 1; }
-  .modal-body { padding: 20px; }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; }
-  .field select, .field textarea { width: 100%; font-size: 13px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg); color: var(--text); padding: 8px 10px; outline: none; }
-  .field select:focus, .field textarea:focus { border-color: #7F77DD; box-shadow: 0 0 0 3px rgba(127,119,221,0.15); }
-  .field textarea { min-height: 68px; resize: vertical; }
-  .modal-footer { padding: 14px 20px; border-top: 0.5px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; position: sticky; bottom: 0; background: var(--bg); }
-  .btn-cancel { font-size: 13px; padding: 6px 14px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: transparent; color: var(--text2); cursor: pointer; }
-  .btn-save { font-size: 13px; padding: 6px 16px; border-radius: var(--radius); border: 0.5px solid #AFA9EC; background: #EEEDFE; color: #3C3489; cursor: pointer; font-weight: 500; }
-  .btn-save:hover { background: #CECBF6; }
+/* ── 사이드바 ── */
+.sidebar{width:var(--sw);min-height:100vh;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:10}
+.sb-logo{padding:22px 16px 16px;border-bottom:1px solid var(--border)}
+.sb-logo .title{font-size:15px;font-weight:700}
+.sb-logo .sub{font-size:11px;color:var(--text3);margin-top:3px}
+.sb-nav{padding:14px 8px;flex:1;overflow-y:auto}
+.nav-sec{margin-bottom:6px}
+.nav-sec-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;padding:6px 10px 4px;display:block}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r);font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;transition:background .1s}
+.nav-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-btn.active{background:var(--abg);color:var(--atext);font-weight:700}
+.nav-sub{padding-left:10px;max-height:0;overflow:hidden;transition:max-height .25s ease}
+.nav-sub.open{max-height:300px}
+.nav-sub .nav-btn{font-size:12px;padding:5px 10px}
+.chevron{font-size:13px;margin-left:auto;transition:transform .2s;display:inline-block}
+.nav-btn.expanded .chevron{transform:rotate(180deg)}
 
-  /* 상세 모달 */
-  .section-block { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; }
-  .section-block:last-child { margin-bottom: 0; }
-  .section-label { font-size: 11px; font-weight: 500; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-  .section-content { font-size: 13px; color: var(--text); line-height: 1.7; white-space: pre-wrap; }
+/* ── 메인 ── */
+.main{margin-left:var(--sw);flex:1;padding:28px 32px;min-height:100vh}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:20px;font-weight:800;margin-bottom:16px}
+.week-badge{font-size:12px;font-weight:700;color:var(--atext);background:var(--abg);padding:3px 11px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.topbar{display:flex;justify-content:flex-end;margin-bottom:14px}
+.btn-add{font-size:13px;padding:7px 16px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg);color:var(--text);cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:700;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.btn-add:hover{background:var(--bg2)}
+
+/* ── 공통 카드/버튼 ── */
+.btn-sm{font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.btn-sm:hover{background:var(--bg2)}
+.btn-sm.del:hover{background:#FCEBEB;color:#791F1F;border-color:#F09595}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:12px;line-height:2.4}
+.empty i{font-size:30px;display:block;margin-bottom:8px;opacity:.2}
+.cat-chip{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+.c-crm{background:#EEEDFE;color:#3C3489}
+.c-learns{background:#E1F5EE;color:#085041}
+.c-teach{background:#FAEEDA;color:#633806}
+.c-qa{background:#E6F1FB;color:#0C447C}
+.c-etc{background:#F1EFE8;color:#444441}
+
+/* ── 모달 ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:16px}
+.overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:14px;border:1px solid var(--border);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.14)}
+.modal.wide{max-width:660px}
+.mh{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:1}
+.mh-title{font-size:15px;font-weight:700}
+.mclose{background:none;border:none;cursor:pointer;color:var(--text2);font-size:20px;line-height:1}
+.mbody{padding:20px}
+.mfoot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:var(--bg)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;font-size:13px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg);color:var(--text);padding:8px 10px;outline:none;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(83,74,183,.12)}
+.field textarea{resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-cancel{font-size:13px;padding:6px 14px;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit}
+.btn-save{font-size:13px;padding:6px 16px;border-radius:var(--r);border:1px solid #AFA9EC;background:var(--abg);color:var(--atext);cursor:pointer;font-weight:700;font-family:inherit}
+.btn-save:hover{background:#CECBF6}
+.sec-block{background:var(--bg2);border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
+.sec-block:last-child{margin-bottom:0}
+.sec-label{font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sec-content{font-size:13px;line-height:1.7;white-space:pre-wrap}
+
+/* ── Weekly Report 카드 ── */
+.report-list{display:flex;flex-direction:column;gap:10px}
+.r-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.r-card:hover{border-color:var(--border2)}
+.r-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer}
+.r-date{font-size:12px;font-weight:700}
+.r-week{font-size:11px;color:var(--text3);margin-left:8px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;cursor:pointer}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:3px}
+.p-done{background:#EAF3DE;color:#27500A}
+.p-wip{background:#E6F1FB;color:#0C447C}
+.p-issue{background:#FCEBEB;color:#791F1F}
+.p-next{background:#FAEEDA;color:#633806}
+.r-preview{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.r-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+/* ── Works 목록+미리보기 레이아웃 ── */
+.works-wrap{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 130px);background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.wlist-panel{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.wlist-top{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.wlist-top-title{font-size:12px;font-weight:700;color:var(--text2)}
+.btn-wlist-add{font-size:12px;padding:4px 10px;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.btn-wlist-add:hover{background:var(--bg2)}
+.wlist-body{flex:1;overflow-y:auto;padding:6px}
+.wlist-item{padding:10px 12px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;margin-bottom:3px}
+.wlist-item:hover{background:var(--bg2)}
+.wlist-item.sel{background:var(--abg);border-color:#AFA9EC}
+.wlist-item-title{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wlist-item.sel .wlist-item-title{color:var(--atext)}
+.wlist-item-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.wlist-item-preview{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wprev-panel{display:flex;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.wprev-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);font-size:13px;gap:10px;padding:2rem}
+.wprev-empty i{font-size:36px;opacity:.2}
+.wprev-content{padding:24px 28px}
+.wprev-header{border-bottom:1px solid var(--border);padding-bottom:14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.wprev-title{font-size:18px;font-weight:800;line-height:1.4}
+.wprev-meta{font-size:11px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:8px}
+.wprev-actions{display:flex;gap:6px;flex-shrink:0}
+.wprev-body{font-size:14px;line-height:1.9;white-space:pre-wrap;color:var(--text)}
+.wprev-imgs{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.wprev-img{max-width:100%;max-height:260px;border-radius:8px;border:1px solid var(--border);object-fit:contain;cursor:pointer}
+
+/* ── All Works 메모 ── */
+.memo-list{display:flex;flex-direction:column;gap:10px}
+.memo-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.memo-card:hover{border-color:var(--border2)}
+.memo-card-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--border);cursor:pointer}
+.memo-card-title{font-size:14px;font-weight:700}
+.memo-card-date{font-size:11px;color:var(--text3);margin-left:10px;flex-shrink:0}
+.memo-card-bd{padding:12px 16px;cursor:pointer}
+.memo-card-text{font-size:13px;color:var(--text2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.memo-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.memo-thumb{width:68px;height:68px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer}
+.memo-card-ft{display:flex;gap:6px;padding:8px 16px 12px}
+.memo-title-input{width:100%;font-size:16px;font-weight:700;border:none;border-bottom:1px solid var(--border);background:transparent;color:var(--text);padding:4px 0 10px;outline:none;margin-bottom:14px;font-family:inherit}
+.memo-title-input::placeholder{color:var(--text3);font-weight:400}
+.memo-editor{width:100%;min-height:220px;font-size:13px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--text);padding:12px 14px;outline:none;resize:vertical;line-height:1.8;font-family:inherit}
+.memo-editor:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(83,74,183,.1)}
+.img-upload-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 12px;border-radius:var(--r);border:1px dashed var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;margin-top:10px}
+.img-upload-btn:hover{background:var(--bg3)}
+.img-preview-area{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.img-preview-item{position:relative}
+.img-preview-item img{width:76px;height:76px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block}
+.img-preview-item .rm{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:#e53e3e;color:#fff;border:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
+
+/* ── Learns 서브탭 ── */
+.subtab-bar{display:flex;gap:4px;padding:8px 8px 0}
+.subtab{font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:inherit;font-weight:700}
+.subtab.active{background:#E1F5EE;color:#085041;border-color:#86CBAE}
+
+/* ── 라이트박스 ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:200;align-items:center;justify-content:center;padding:24px}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:8px;object-fit:contain}
+.lb-close{position:fixed;top:16px;right:20px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer}
+
+/* ── 주간보고 상세 모달 ── */
+.wd-modal{background:var(--bg);border-radius:14px;border:1px solid var(--border);width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.14)}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>
-    나의 주간 업무 보고
-    <span class="week-badge" id="weekLabel"></span>
-  </h1>
 
-  <div class="topbar">
-    <div class="filter-tabs">
-      <button type="button" class="tab active" onclick="setFilter('all',this)">전체</button>
-      <button type="button" class="tab" onclick="setFilter('QA',this)">QA</button>
-      <button type="button" class="tab" onclick="setFilter('세일즈 CRM',this)">세일즈 CRM</button>
-      <button type="button" class="tab" onclick="setFilter('VAN 해피콜',this)">VAN 해피콜</button>
-      <button type="button" class="tab" onclick="setFilter('기타',this)">기타</button>
+<!-- 사이드바 -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="title">Chloe Works</div>
+    <div class="sub">나의 주간 업무 보고</div>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-sec">
+      <span class="nav-sec-label">Report</span>
+      <button class="nav-btn active" id="nav-weekly" onclick="showPage('weekly',this)">📋 Weekly Report</button>
     </div>
-    <button type="button" class="btn-write" onclick="openWrite(null)">
-      <i class="ti ti-plus"></i> 보고서 작성
-    </button>
+    <div class="nav-sec">
+      <span class="nav-sec-label">Works</span>
+      <button class="nav-btn" id="nav-allworks" onclick="toggleWorks(this)">
+        📂 All Works <i class="ti ti-chevron-down chevron"></i>
+      </button>
+      <div class="nav-sub" id="worksSub">
+        <button class="nav-btn" onclick="showPage('works-crm',this)">📊 Sales CRM</button>
+        <button class="nav-btn" onclick="showPage('works-learns',this)">📚 Learns</button>
+        <button class="nav-btn" onclick="showPage('works-qa',this)">✅ QA</button>
+        <button class="nav-btn" onclick="showPage('works-etc',this)">🔖 Etc</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- 메인 -->
+<main class="main">
+
+  <!-- Weekly Report -->
+  <div class="page active" id="page-weekly">
+    <div class="page-title">📋 Weekly Report</div>
+    <div class="week-badge" id="weekLabel"></div>
+    <div class="topbar">
+      <button class="btn-add" onclick="openWR(null)"><i class="ti ti-plus"></i> 보고서 작성</button>
+    </div>
+    <div class="report-list" id="reportList"></div>
   </div>
 
-  <div class="report-list" id="reportList"></div>
+  <!-- Sales CRM -->
+  <div class="page" id="page-works-crm">
+    <div class="page-title" style="color:#534AB7">📊 Sales CRM</div>
+    <div class="works-wrap">
+      <div class="wlist-panel">
+        <div class="wlist-top">
+          <span class="wlist-top-title">목록</span>
+          <button class="btn-wlist-add" onclick="openWork(null,'Sales CRM')"><i class="ti ti-plus"></i> 추가</button>
+        </div>
+        <div class="wlist-body" id="wlist-crm"></div>
+      </div>
+      <div class="wprev-panel" id="wprev-crm">
+        <div class="wprev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Learns -->
+  <div class="page" id="page-works-learns">
+    <div class="page-title" style="color:#2DA870">📚 Learns</div>
+    <div class="works-wrap" style="grid-template-columns:300px 1fr">
+      <div class="wlist-panel">
+        <div class="subtab-bar">
+          <button class="subtab active" id="ltab-l" onclick="setLTab('Learns',this)">Learns</button>
+          <button class="subtab" id="ltab-t" onclick="setLTab('Learns Teachers',this)">Learns Teachers</button>
+        </div>
+        <div class="wlist-top">
+          <span class="wlist-top-title">목록</span>
+          <button class="btn-wlist-add" id="learns-add-btn" onclick="openWork(null,'Learns')"><i class="ti ti-plus"></i> 추가</button>
+        </div>
+        <div class="wlist-body" id="wlist-learns"></div>
+      </div>
+      <div class="wprev-panel" id="wprev-learns">
+        <div class="wprev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QA -->
+  <div class="page" id="page-works-qa">
+    <div class="page-title" style="color:#2E86C1">✅ QA</div>
+    <div class="works-wrap">
+      <div class="wlist-panel">
+        <div class="wlist-top">
+          <span class="wlist-top-title">목록</span>
+          <button class="btn-wlist-add" onclick="openWork(null,'QA')"><i class="ti ti-plus"></i> 추가</button>
+        </div>
+        <div class="wlist-body" id="wlist-qa"></div>
+      </div>
+      <div class="wprev-panel" id="wprev-qa">
+        <div class="wprev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Etc -->
+  <div class="page" id="page-works-etc">
+    <div class="page-title" style="color:#E08D3C">🔖 Etc</div>
+    <div class="works-wrap">
+      <div class="wlist-panel">
+        <div class="wlist-top">
+          <span class="wlist-top-title">목록</span>
+          <button class="btn-wlist-add" onclick="openWork(null,'Etc')"><i class="ti ti-plus"></i> 추가</button>
+        </div>
+        <div class="wlist-body" id="wlist-etc"></div>
+      </div>
+      <div class="wprev-panel" id="wprev-etc">
+        <div class="wprev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Works (메모장) -->
+  <div class="page" id="page-works-all">
+    <div class="page-title">📂 All Works</div>
+    <div class="topbar">
+      <button class="btn-add" onclick="openMemo(null)"><i class="ti ti-plus"></i> 메모 추가</button>
+    </div>
+    <div class="memo-list" id="memoList"></div>
+  </div>
+
+</main>
+
+<!-- ── 주간보고 작성 모달 ── -->
+<div class="overlay" id="wrWriteOv">
+  <div class="modal">
+    <div class="mh"><span class="mh-title" id="wrWriteTitle">주간 보고 작성</span><button class="mclose" onclick="closeWR()"><i class="ti ti-x"></i></button></div>
+    <div class="mbody">
+      <div class="field"><label>완료 업무 *</label><textarea id="wf-done" style="min-height:80px" placeholder="이번 주 완료한 업무 (줄바꿈으로 항목 구분)"></textarea></div>
+      <div class="field"><label>진행 중</label><textarea id="wf-wip" style="min-height:64px" placeholder="현재 진행 중인 업무"></textarea></div>
+      <div class="field"><label>이슈 / 특이사항</label><textarea id="wf-issue" style="min-height:64px" placeholder="문제, 블로커, 이슈 (없으면 비워두세요)"></textarea></div>
+      <div class="field"><label>다음 주 계획</label><textarea id="wf-next" style="min-height:64px" placeholder="다음 주 예정 업무"></textarea></div>
+    </div>
+    <div class="mfoot"><button class="btn-cancel" onclick="closeWR()">취소</button><button class="btn-save" onclick="saveWR()">저장</button></div>
+  </div>
 </div>
 
-<!-- 작성/수정 모달 -->
-<div class="modal-overlay" id="writeBg">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title" id="writeTitle">주간 업무 보고 작성</span>
-      <button type="button" class="modal-close" onclick="closeWrite()" aria-label="닫기"><i class="ti ti-x"></i></button>
+<!-- ── 주간보고 상세 모달 ── -->
+<div class="overlay" id="wrDetailOv">
+  <div class="wd-modal">
+    <div class="mh">
+      <div><div style="font-size:14px;font-weight:700" id="wd-date"></div><div style="font-size:11px;color:var(--text3)" id="wd-week"></div></div>
+      <button class="mclose" onclick="closeWRDetail()"><i class="ti ti-x"></i></button>
     </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>업무 분야</label>
-        <select id="f-cat">
-          <option value="QA">QA</option>
-          <option value="세일즈 CRM">세일즈 CRM</option>
-          <option value="VAN 해피콜">VAN 해피콜</option>
-          <option value="기타">기타</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>완료 업무 <span style="color:#A32D2D">*</span></label>
-        <textarea id="f-done" placeholder="이번 주 완료한 업무 (줄바꿈으로 항목 구분)"></textarea>
-      </div>
-      <div class="field">
-        <label>진행 중</label>
-        <textarea id="f-wip" placeholder="현재 진행 중인 업무"></textarea>
-      </div>
-      <div class="field">
-        <label>이슈 / 특이사항</label>
-        <textarea id="f-issue" placeholder="문제, 블로커, 공유할 이슈 (없으면 비워두세요)"></textarea>
-      </div>
-      <div class="field">
-        <label>다음 주 계획</label>
-        <textarea id="f-next" placeholder="다음 주 예정 업무"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn-cancel" onclick="closeWrite()">취소</button>
-      <button type="button" class="btn-save" onclick="submitReport()">저장</button>
+    <div class="mbody">
+      <div class="sec-block"><div class="sec-label" style="color:#27500A"><i class="ti ti-circle-check"></i> 완료 업무</div><div class="sec-content" id="wd-done"></div></div>
+      <div class="sec-block"><div class="sec-label" style="color:#0C447C"><i class="ti ti-loader"></i> 진행 중</div><div class="sec-content" id="wd-wip"></div></div>
+      <div class="sec-block" id="wd-issue-bl"><div class="sec-label" style="color:#791F1F"><i class="ti ti-alert-triangle"></i> 이슈 / 특이사항</div><div class="sec-content" id="wd-issue"></div></div>
+      <div class="sec-block"><div class="sec-label" style="color:#633806"><i class="ti ti-calendar-event"></i> 다음 주 계획</div><div class="sec-content" id="wd-next"></div></div>
     </div>
   </div>
 </div>
 
-<!-- 상세 모달 -->
-<div class="modal-overlay" id="detailBg">
-  <div class="modal">
-    <div class="modal-header">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span class="cat-badge" id="d-cat-badge"></span>
-        <span style="font-size:11px;color:var(--text3)" id="d-date"></span>
+<!-- ── 업무 작성 모달 (Sales CRM / Learns / QA / Etc 공용) ── -->
+<div class="overlay" id="workWriteOv">
+  <div class="modal wide">
+    <div class="mh"><span class="mh-title" id="workWriteTitle">업무 추가</span><button class="mclose" onclick="closeWork()"><i class="ti ti-x"></i></button></div>
+    <div class="mbody">
+      <div class="field-row">
+        <div class="field"><label>업무명 *</label><input type="text" id="wo-title" placeholder="업무 제목" /></div>
+        <div class="field"><label>카테고리</label>
+          <select id="wo-cat">
+            <option value="Sales CRM">Sales CRM</option>
+            <option value="Learns">Learns</option>
+            <option value="Learns Teachers">Learns Teachers</option>
+            <option value="QA">QA</option>
+            <option value="Etc">Etc</option>
+          </select>
+        </div>
       </div>
-      <button type="button" class="modal-close" onclick="closeDetail()" aria-label="닫기"><i class="ti ti-x"></i></button>
+      <div class="field"><label>내용 / 메모</label><textarea id="wo-desc" style="min-height:200px" placeholder="내용을 자유롭게 적어요. 줄바꿈, 긴 내용 모두 가능해요."></textarea></div>
+      <label class="img-upload-btn" for="wo-img-input"><i class="ti ti-photo-plus"></i> 이미지 추가</label>
+      <input type="file" id="wo-img-input" accept="image/*" multiple style="display:none" />
+      <div class="img-preview-area" id="wo-img-preview"></div>
     </div>
-    <div class="modal-body">
-      <div class="section-block">
-        <div class="section-label" style="color:#27500A"><i class="ti ti-circle-check"></i> 완료 업무</div>
-        <div class="section-content" id="d-done"></div>
-      </div>
-      <div class="section-block">
-        <div class="section-label" style="color:#0C447C"><i class="ti ti-loader"></i> 진행 중</div>
-        <div class="section-content" id="d-wip"></div>
-      </div>
-      <div class="section-block" id="d-issue-block">
-        <div class="section-label" style="color:#791F1F"><i class="ti ti-alert-triangle"></i> 이슈 / 특이사항</div>
-        <div class="section-content" id="d-issue"></div>
-      </div>
-      <div class="section-block">
-        <div class="section-label" style="color:#633806"><i class="ti ti-calendar-event"></i> 다음 주 계획</div>
-        <div class="section-content" id="d-next"></div>
-      </div>
+    <div class="mfoot"><button class="btn-cancel" onclick="closeWork()">취소</button><button class="btn-save" onclick="saveWork()">저장</button></div>
+  </div>
+</div>
+
+<!-- ── 메모 작성 모달 (All Works) ── -->
+<div class="overlay" id="memoWriteOv">
+  <div class="modal wide">
+    <div class="mh"><span class="mh-title" id="memoWriteTitle">메모 추가</span><button class="mclose" onclick="closeMemo()"><i class="ti ti-x"></i></button></div>
+    <div class="mbody">
+      <input type="text" class="memo-title-input" id="mo-title" placeholder="제목을 입력하세요" />
+      <textarea class="memo-editor" id="mo-content" placeholder="내용을 자유롭게 적어요&#10;인수인계 사항, 알아야 할 것, 긴 메모 모두 가능해요"></textarea>
+      <label class="img-upload-btn" for="mo-img-input"><i class="ti ti-photo-plus"></i> 이미지 추가</label>
+      <input type="file" id="mo-img-input" accept="image/*" multiple style="display:none" />
+      <div class="img-preview-area" id="mo-img-preview"></div>
+    </div>
+    <div class="mfoot"><button class="btn-cancel" onclick="closeMemo()">취소</button><button class="btn-save" onclick="saveMemo()">저장</button></div>
+  </div>
+</div>
+
+<!-- ── 메모 상세 모달 ── -->
+<div class="overlay" id="memoDetailOv">
+  <div class="modal wide">
+    <div class="mh">
+      <div><div style="font-size:16px;font-weight:800" id="mod-title"></div><div style="font-size:11px;color:var(--text3);margin-top:3px" id="mod-date"></div></div>
+      <button class="mclose" onclick="closeMemoDetail()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="mbody">
+      <div class="sec-block"><div class="sec-content" id="mod-content" style="font-size:14px;line-height:1.85;min-height:40px"></div></div>
+      <div id="mod-images" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px"></div>
     </div>
   </div>
+</div>
+
+<!-- ── 라이트박스 ── -->
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()"><i class="ti ti-x"></i></button>
+  <img id="lb-img" src="" alt="확대 이미지" />
 </div>
 
 <script>
-const CAT_STYLE = {
-  'QA':         'cat-qa',
-  '세일즈 CRM': 'cat-crm',
-  'VAN 해피콜': 'cat-van',
-  '기타':       'cat-etc',
-};
+/* ── 유틸 ── */
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function weekLabel(){var n=new Date(),dow=(n.getDay()+6)%7,m=new Date(n);m.setDate(n.getDate()-dow);var s=new Date(m);s.setDate(m.getDate()+6);var f=function(d){return (d.getMonth()+1)+'/'+d.getDate()};return m.getFullYear()+'년 '+f(m)+' ~ '+f(s)}
+function loadLS(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}}
+function saveLS(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function openLB(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open')}
+function closeLB(){document.getElementById('lightbox').classList.remove('open')}
 
-function getWeekLabel() {
-  const now = new Date(), dow = (now.getDay() + 6) % 7;
-  const mon = new Date(now); mon.setDate(now.getDate() - dow);
-  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-  const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
-  return `${mon.getFullYear()}년 ${fmt(mon)} ~ ${fmt(sun)}`;
+document.getElementById('weekLabel').textContent=weekLabel();
+
+/* ── 페이지 전환 ── */
+function showPage(id, el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
+  if(el) el.classList.add('active');
+  if(id==='weekly') renderWR();
+  else if(id.indexOf('works')===0) renderAllWorks();
 }
-document.getElementById('weekLabel').textContent = getWeekLabel();
-
-function loadReports() {
-  try { return JSON.parse(localStorage.getItem('weekly-reports') || '[]'); } catch { return []; }
-}
-function saveReports(data) {
-  localStorage.setItem('weekly-reports', JSON.stringify(data));
+function toggleWorks(el){
+  var sub=document.getElementById('worksSub');
+  sub.classList.toggle('open');
+  el.classList.toggle('expanded');
 }
 
-let reports = loadReports();
-let nextId = reports.length ? Math.max(...reports.map(r => r.id)) + 1 : 1;
-let filterCat = 'all';
-let editingId = null;
+/* ══ WEEKLY REPORT ══ */
+var wrList=loadLS('cw-wr'), wrNextId=wrList.length?Math.max.apply(null,wrList.map(function(r){return r.id}))+1:1, wrEdit=null;
 
-function render() {
-  const list = document.getElementById('reportList');
-  const filtered = filterCat === 'all' ? reports : reports.filter(r => r.cat === filterCat);
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty">아직 작성된 보고서가 없어요.<br>보고서 작성 버튼으로 시작해보세요.</div>';
-    return;
-  }
-  const count = t => t.trim() ? t.trim().split('\n').filter(Boolean).length : 0;
-  list.innerHTML = filtered.map(r => {
-    const cls = CAT_STYLE[r.cat] || 'cat-etc';
-    return `<div class="report-card">
-      <div class="card-top" onclick="openDetail(${r.id})">
-        <span class="cat-badge ${cls}">${r.cat}</span>
-        <span class="card-date">${r.date}</span>
-      </div>
-      <div onclick="openDetail(${r.id})">
-        <div class="pills">
-          <span class="pill pill-done"><span>${count(r.done)}</span>&nbsp;완료</span>
-          <span class="pill pill-wip"><span>${count(r.wip)}</span>&nbsp;진행</span>
-          ${r.issue && r.issue !== '없음' ? `<span class="pill pill-issue"><i class="ti ti-alert-circle" style="font-size:11px"></i>&nbsp;이슈</span>` : ''}
-          <span class="pill pill-next"><span>${count(r.next)}</span>&nbsp;다음주</span>
-        </div>
-        <div class="preview">${r.done.split('\n')[0]}</div>
-      </div>
-      <div class="card-actions">
-        <button type="button" class="btn-sm" onclick="openWrite(${r.id})"><i class="ti ti-edit"></i> 수정</button>
-        <button type="button" class="btn-sm danger" onclick="deleteReport(${r.id})"><i class="ti ti-trash"></i> 삭제</button>
-      </div>
-    </div>`;
+function renderWR(){
+  var el=document.getElementById('reportList');
+  if(!wrList.length){el.innerHTML='<div class="empty"><i class="ti ti-clipboard"></i>아직 작성된 보고서가 없어요.<br>보고서 작성 버튼으로 시작해보세요.</div>';return}
+  el.innerHTML=wrList.map(function(r){
+    var cnt=function(t){return t?t.trim().split('\n').filter(function(l){return l}).length:0};
+    return '<div class="r-card">'
+      +'<div class="r-card-top" onclick="openWRDetail('+r.id+')">'
+      +'<div><span class="r-date">'+r.date+'</span><span class="r-week">'+r.wl+'</span></div>'
+      +'</div>'
+      +'<div onclick="openWRDetail('+r.id+')">'
+      +'<div class="pills">'
+      +'<span class="pill p-done">'+cnt(r.done)+' 완료</span>'
+      +'<span class="pill p-wip">'+cnt(r.wip)+' 진행</span>'
+      +(r.issue&&r.issue!='없음'?'<span class="pill p-issue"><i class="ti ti-alert-circle" style="font-size:11px"></i> 이슈</span>':'')
+      +'<span class="pill p-next">'+cnt(r.next)+' 다음주</span>'
+      +'</div>'
+      +'<div class="r-preview">'+(r.done||'').split('\n')[0]+'</div>'
+      +'</div>'
+      +'<div class="r-actions">'
+      +'<button class="btn-sm" onclick="openWR('+r.id+')"><i class="ti ti-edit"></i> 수정</button>'
+      +'<button class="btn-sm del" onclick="delWR('+r.id+')"><i class="ti ti-trash"></i> 삭제</button>'
+      +'</div>'
+      +'</div>'
   }).join('');
 }
+function openWR(id){
+  wrEdit=id;
+  document.getElementById('wrWriteTitle').textContent=id?'주간 보고 수정':'주간 보고 작성';
+  if(id){var r=wrList.find(function(x){return x.id===id});document.getElementById('wf-done').value=r.done||'';document.getElementById('wf-wip').value=r.wip||'';document.getElementById('wf-issue').value=r.issue=='없음'?'':r.issue||'';document.getElementById('wf-next').value=r.next||''}
+  else{['done','wip','issue','next'].forEach(function(f){document.getElementById('wf-'+f).value=''})}
+  document.getElementById('wrWriteOv').classList.add('open');
+}
+function closeWR(){document.getElementById('wrWriteOv').classList.remove('open');wrEdit=null}
+function saveWR(){
+  var done=document.getElementById('wf-done').value.trim();
+  if(!done){alert('완료 업무는 필수입니다.');return}
+  var wip=document.getElementById('wf-wip').value.trim();
+  var issue=document.getElementById('wf-issue').value.trim()||'없음';
+  var next=document.getElementById('wf-next').value.trim();
+  if(wrEdit){var i=wrList.findIndex(function(x){return x.id===wrEdit});if(i>-1)wrList[i]=Object.assign({},wrList[i],{done:done,wip:wip,issue:issue,next:next})}
+  else{wrList.unshift({id:wrNextId++,date:todayStr(),wl:weekLabel(),done:done,wip:wip,issue:issue,next:next})}
+  saveLS('cw-wr',wrList);closeWR();renderWR();
+}
+function delWR(id){if(!confirm('삭제할까요?'))return;wrList=wrList.filter(function(x){return x.id!==id});saveLS('cw-wr',wrList);renderWR()}
+function openWRDetail(id){
+  var r=wrList.find(function(x){return x.id===id});if(!r)return;
+  document.getElementById('wd-date').textContent=r.date;
+  document.getElementById('wd-week').textContent=r.wl||'';
+  document.getElementById('wd-done').textContent=r.done||'';
+  document.getElementById('wd-wip').textContent=r.wip||'';
+  document.getElementById('wd-issue').textContent=r.issue||'';
+  document.getElementById('wd-issue-bl').style.display=r.issue&&r.issue!='없음'?'block':'none';
+  document.getElementById('wd-next').textContent=r.next||'';
+  document.getElementById('wrDetailOv').classList.add('open');
+}
+function closeWRDetail(){document.getElementById('wrDetailOv').classList.remove('open')}
 
-function setFilter(cat, el) {
-  filterCat = cat;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+/* ══ WORKS (Sales CRM / Learns / QA / Etc) ══ */
+var wkList=loadLS('cw-wk'), wkNextId=wkList.length?Math.max.apply(null,wkList.map(function(w){return w.id}))+1:1, wkEdit=null, wkImgs=[];
+var wkSel={crm:null,learns:null,qa:null,etc:null};
+var lTab='Learns';
+
+var CAT_CLS={'Sales CRM':'c-crm','Learns':'c-learns','Learns Teachers':'c-teach','QA':'c-qa','Etc':'c-etc'};
+var CAT_KEY={'Sales CRM':'crm','Learns':'learns','Learns Teachers':'learns','QA':'qa','Etc':'etc'};
+
+function renderAllWorks(){
+  renderWList('crm', wkList.filter(function(w){return w.cat==='Sales CRM'}));
+  renderWList('learns', wkList.filter(function(w){return w.cat===lTab}));
+  renderWList('qa', wkList.filter(function(w){return w.cat==='QA'}));
+  renderWList('etc', wkList.filter(function(w){return w.cat==='Etc'}));
+  renderMemos();
+}
+function setLTab(cat, el){
+  lTab=cat;
+  document.querySelectorAll('.subtab').forEach(function(t){t.classList.remove('active')});
   el.classList.add('active');
-  render();
+  document.getElementById('learns-add-btn').onclick=function(){openWork(null,cat)};
+  wkSel.learns=null;
+  renderWList('learns', wkList.filter(function(w){return w.cat===lTab}));
+  showPreview('learns',null);
+}
+function renderWList(key, list){
+  var el=document.getElementById('wlist-'+key);if(!el)return;
+  if(!list.length){el.innerHTML='<div class="empty"><i class="ti ti-clipboard"></i>등록된 업무가 없어요.<br>추가 버튼으로 시작해보세요.</div>';return}
+  el.innerHTML=list.map(function(w){
+    var sel=wkSel[key]===w.id;
+    return '<div class="wlist-item'+(sel?' sel':'')+'" onclick="selWork(\''+key+'\','+w.id+')">'
+      +'<div class="wlist-item-title">'+w.title+'</div>'
+      +'<div class="wlist-item-meta">'+w.cat+' · '+w.date+'</div>'
+      +(w.desc?'<div class="wlist-item-preview">'+w.desc.replace(/\n/g,' ')+'</div>':'')
+      +'</div>'
+  }).join('');
+}
+function selWork(key, id){
+  wkSel[key]=id;
+  var cat = key==='crm'?'Sales CRM': key==='qa'?'QA': key==='etc'?'Etc':lTab;
+  renderWList(key, wkList.filter(function(w){return key==='learns'?w.cat===lTab:CAT_KEY[w.cat]===key}));
+  showPreview(key, id);
+}
+function showPreview(key, id){
+  var panel=document.getElementById('wprev-'+key);if(!panel)return;
+  if(!id){panel.innerHTML='<div class="wprev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';return}
+  var w=wkList.find(function(x){return x.id===id});if(!w)return;
+
+  var wrap=document.createElement('div');wrap.className='wprev-content';
+
+  var hd=document.createElement('div');hd.className='wprev-header';
+  var tBlock=document.createElement('div');
+  var tEl=document.createElement('div');tEl.className='wprev-title';tEl.textContent=w.title;
+  var mEl=document.createElement('div');mEl.className='wprev-meta';
+  var chip=document.createElement('span');chip.className='cat-chip '+(CAT_CLS[w.cat]||'c-etc');chip.textContent=w.cat;
+  var dEl=document.createElement('span');dEl.textContent=w.date;
+  mEl.appendChild(chip);mEl.appendChild(dEl);
+  tBlock.appendChild(tEl);tBlock.appendChild(mEl);
+
+  var acts=document.createElement('div');acts.className='wprev-actions';
+  var eBtn=document.createElement('button');eBtn.className='btn-sm';eBtn.innerHTML='<i class="ti ti-edit"></i> 수정';
+  eBtn.onclick=function(){openWork(w.id,w.cat)};
+  var dBtn=document.createElement('button');dBtn.className='btn-sm del';dBtn.innerHTML='<i class="ti ti-trash"></i> 삭제';
+  dBtn.onclick=function(){delWork(w.id,key)};
+  acts.appendChild(eBtn);acts.appendChild(dBtn);
+  hd.appendChild(tBlock);hd.appendChild(acts);wrap.appendChild(hd);
+
+  var body=document.createElement('div');body.className='wprev-body';body.textContent=w.desc||'내용 없음';
+  wrap.appendChild(body);
+
+  if(w.imgs&&w.imgs.length){
+    var imgWrap=document.createElement('div');imgWrap.className='wprev-imgs';
+    w.imgs.forEach(function(src){
+      var img=document.createElement('img');img.className='wprev-img';img.src=src;img.alt='첨부이미지';
+      img.onclick=function(){openLB(src)};
+      imgWrap.appendChild(img);
+    });
+    wrap.appendChild(imgWrap);
+  }
+  panel.innerHTML='';panel.appendChild(wrap);
+}
+function openWork(id, cat){
+  wkEdit=id;wkImgs=[];
+  document.getElementById('workWriteTitle').textContent=id?'업무 수정':'업무 추가';
+  if(id){
+    var w=wkList.find(function(x){return x.id===id});
+    document.getElementById('wo-title').value=w.title||'';
+    document.getElementById('wo-cat').value=w.cat||'Sales CRM';
+    document.getElementById('wo-desc').value=w.desc||'';
+    wkImgs=w.imgs?w.imgs.slice():[];
+  } else {
+    document.getElementById('wo-title').value='';
+    document.getElementById('wo-cat').value=cat||'Sales CRM';
+    document.getElementById('wo-desc').value='';
+  }
+  renderWkImgPreview();
+  document.getElementById('workWriteOv').classList.add('open');
+}
+function closeWork(){document.getElementById('workWriteOv').classList.remove('open');wkEdit=null;wkImgs=[]}
+function renderWkImgPreview(){
+  document.getElementById('wo-img-preview').innerHTML=wkImgs.map(function(src,i){
+    return '<div class="img-preview-item"><img src="'+src+'" alt="미리보기" /><button class="rm" onclick="rmWkImg('+i+')">×</button></div>'
+  }).join('');
+}
+function rmWkImg(i){wkImgs.splice(i,1);renderWkImgPreview()}
+document.getElementById('wo-img-input').onchange=function(e){
+  Array.from(e.target.files).forEach(function(f){
+    var r=new FileReader();r.onload=function(ev){wkImgs.push(ev.target.result);renderWkImgPreview()};r.readAsDataURL(f);
+  });e.target.value='';
+};
+function saveWork(){
+  var title=document.getElementById('wo-title').value.trim();
+  if(!title){alert('업무명은 필수입니다.');return}
+  var cat=document.getElementById('wo-cat').value;
+  var desc=document.getElementById('wo-desc').value.trim();
+  var entry={id:wkEdit||wkNextId++,title:title,cat:cat,desc:desc,imgs:wkImgs.slice(),date:todayStr()};
+  if(wkEdit){var i=wkList.findIndex(function(x){return x.id===wkEdit});if(i>-1)wkList[i]=entry}
+  else{wkList.unshift(entry)}
+  saveLS('cw-wk',wkList);
+  var key=CAT_KEY[cat]||'etc';
+  wkSel[key]=entry.id;
+  closeWork();renderAllWorks();
+  setTimeout(function(){showPreview(key,entry.id)},50);
+}
+function delWork(id, key){
+  if(!confirm('삭제할까요?'))return;
+  wkList=wkList.filter(function(x){return x.id!==id});
+  saveLS('cw-wk',wkList);
+  wkSel[key]=null;
+  renderAllWorks();showPreview(key,null);
 }
 
-function openWrite(id) {
-  editingId = id;
-  document.getElementById('writeTitle').textContent = id ? '보고서 수정' : '주간 업무 보고 작성';
-  if (id) {
-    const r = reports.find(x => x.id === id);
-    document.getElementById('f-cat').value = r.cat;
-    document.getElementById('f-done').value = r.done;
-    document.getElementById('f-wip').value = r.wip;
-    document.getElementById('f-issue').value = r.issue === '없음' ? '' : r.issue;
-    document.getElementById('f-next').value = r.next;
+/* ══ ALL WORKS 메모 ══ */
+var memoList=loadLS('cw-memo'), memoNextId=memoList.length?Math.max.apply(null,memoList.map(function(m){return m.id}))+1:1, memoEdit=null, memoImgs=[];
+
+function renderMemos(){
+  var el=document.getElementById('memoList');if(!el)return;
+  if(!memoList.length){el.innerHTML='<div class="empty"><i class="ti ti-folder-open"></i>아직 메모가 없어요.<br>메모 추가 버튼으로 시작해보세요.</div>';return}
+  el.innerHTML=memoList.map(function(m){
+    var imgs=m.imgs||[];
+    var thumbs=imgs.slice(0,4).map(function(src){
+      return '<img class="memo-thumb" src="'+src+'" alt="첨부이미지" onclick="event.stopPropagation();openLB(\''+src+'\')" />'
+    }).join('');
+    var more=imgs.length>4?'<div style="width:68px;height:68px;border-radius:6px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3)">+'+( imgs.length-4)+'</div>':'';
+    return '<div class="memo-card">'
+      +'<div class="memo-card-hd" onclick="openMemoDetail('+m.id+')">'
+      +'<span class="memo-card-title">'+m.title+'</span>'
+      +'<span class="memo-card-date">'+m.date+'</span>'
+      +'</div>'
+      +'<div class="memo-card-bd" onclick="openMemoDetail('+m.id+')">'
+      +'<div class="memo-card-text">'+(m.content||'')+'</div>'
+      +(imgs.length?'<div class="memo-thumbs">'+thumbs+more+'</div>':'')
+      +'</div>'
+      +'<div class="memo-card-ft">'
+      +'<button class="btn-sm" onclick="openMemo('+m.id+')"><i class="ti ti-edit"></i> 수정</button>'
+      +'<button class="btn-sm del" onclick="delMemo('+m.id+')"><i class="ti ti-trash"></i> 삭제</button>'
+      +'</div>'
+      +'</div>'
+  }).join('');
+}
+function openMemo(id){
+  memoEdit=id;memoImgs=[];
+  document.getElementById('memoWriteTitle').textContent=id?'메모 수정':'메모 추가';
+  if(id){
+    var m=memoList.find(function(x){return x.id===id});
+    document.getElementById('mo-title').value=m.title||'';
+    document.getElementById('mo-content').value=m.content||'';
+    memoImgs=m.imgs?m.imgs.slice():[];
   } else {
-    ['done','wip','issue','next'].forEach(f => document.getElementById('f-'+f).value = '');
-    document.getElementById('f-cat').value = 'QA';
+    document.getElementById('mo-title').value='';
+    document.getElementById('mo-content').value='';
   }
-  document.getElementById('writeBg').classList.add('open');
+  renderMemoImgPreview();
+  document.getElementById('memoWriteOv').classList.add('open');
 }
-function closeWrite() {
-  document.getElementById('writeBg').classList.remove('open');
-  editingId = null;
+function closeMemo(){document.getElementById('memoWriteOv').classList.remove('open');memoEdit=null;memoImgs=[]}
+function renderMemoImgPreview(){
+  document.getElementById('mo-img-preview').innerHTML=memoImgs.map(function(src,i){
+    return '<div class="img-preview-item"><img src="'+src+'" alt="미리보기" /><button class="rm" onclick="rmMemoImg('+i+')">×</button></div>'
+  }).join('');
 }
-function submitReport() {
-  const cat = document.getElementById('f-cat').value;
-  const done = document.getElementById('f-done').value.trim();
-  const wip = document.getElementById('f-wip').value.trim();
-  const issue = document.getElementById('f-issue').value.trim() || '없음';
-  const next = document.getElementById('f-next').value.trim();
-  if (!done) { alert('완료 업무는 필수입니다.'); return; }
-  const today = new Date();
-  const date = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  if (editingId) {
-    const idx = reports.findIndex(x => x.id === editingId);
-    if (idx > -1) reports[idx] = { ...reports[idx], cat, done, wip, issue, next };
-  } else {
-    reports.unshift({ id: nextId++, cat, date, done, wip, issue, next });
-  }
-  saveReports(reports);
-  closeWrite();
-  render();
+function rmMemoImg(i){memoImgs.splice(i,1);renderMemoImgPreview()}
+document.getElementById('mo-img-input').onchange=function(e){
+  Array.from(e.target.files).forEach(function(f){
+    var r=new FileReader();r.onload=function(ev){memoImgs.push(ev.target.result);renderMemoImgPreview()};r.readAsDataURL(f);
+  });e.target.value='';
+};
+function saveMemo(){
+  var title=document.getElementById('mo-title').value.trim();
+  var content=document.getElementById('mo-content').value.trim();
+  if(!title&&!content){alert('제목 또는 내용을 입력해주세요.');return}
+  var entry={id:memoEdit||memoNextId++,title:title||'(제목 없음)',content:content,imgs:memoImgs.slice(),date:todayStr()};
+  if(memoEdit){var i=memoList.findIndex(function(x){return x.id===memoEdit});if(i>-1)memoList[i]=entry}
+  else{memoList.unshift(entry)}
+  saveLS('cw-memo',memoList);closeMemo();renderMemos();
 }
-function deleteReport(id) {
-  if (!confirm('이 보고서를 삭제할까요?')) return;
-  reports = reports.filter(x => x.id !== id);
-  saveReports(reports);
-  render();
+function delMemo(id){
+  if(!confirm('이 메모를 삭제할까요?'))return;
+  memoList=memoList.filter(function(x){return x.id!==id});
+  saveLS('cw-memo',memoList);renderMemos();
 }
-function openDetail(id) {
-  const r = reports.find(x => x.id === id); if (!r) return;
-  const cls = CAT_STYLE[r.cat] || 'cat-etc';
-  const cb = document.getElementById('d-cat-badge');
-  cb.textContent = r.cat; cb.className = 'cat-badge ' + cls;
-  document.getElementById('d-date').textContent = r.date;
-  document.getElementById('d-done').textContent = r.done;
-  document.getElementById('d-wip').textContent = r.wip;
-  document.getElementById('d-issue').textContent = r.issue;
-  document.getElementById('d-issue-block').style.display = r.issue && r.issue !== '없음' ? 'block' : 'none';
-  document.getElementById('d-next').textContent = r.next;
-  document.getElementById('detailBg').classList.add('open');
+function openMemoDetail(id){
+  var m=memoList.find(function(x){return x.id===id});if(!m)return;
+  document.getElementById('mod-title').textContent=m.title||'(제목 없음)';
+  document.getElementById('mod-date').textContent=m.date;
+  document.getElementById('mod-content').textContent=m.content||'';
+  var imgs=document.getElementById('mod-images');
+  if(m.imgs&&m.imgs.length){
+    imgs.style.display='flex';
+    imgs.innerHTML=m.imgs.map(function(src){
+      return '<img src="'+src+'" alt="첨부이미지" style="max-width:100%;max-height:300px;border-radius:8px;border:1px solid var(--border);object-fit:contain;cursor:pointer" onclick="openLB(\''+src+'\')" />'
+    }).join('');
+  } else {imgs.style.display='none';imgs.innerHTML=''}
+  document.getElementById('memoDetailOv').classList.add('open');
 }
-function closeDetail() { document.getElementById('detailBg').classList.remove('open'); }
-document.getElementById('writeBg').addEventListener('click', function(e) { if (e.target === this) closeWrite(); });
-document.getElementById('detailBg').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
-render();
+function closeMemoDetail(){document.getElementById('memoDetailOv').classList.remove('open')}
+
+/* ── 오버레이 바깥 클릭 닫기 ── */
+['wrWriteOv','wrDetailOv','workWriteOv','memoWriteOv','memoDetailOv'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+});
+
+/* ── 초기 렌더 ── */
+renderWR();
+renderAllWorks();
 </script>
 </body>
 </html>
