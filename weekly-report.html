@@ -77,6 +77,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 .s-todo{background:var(--todo-bg);color:var(--todo)}
 .s-wip{background:var(--wip-bg);color:var(--wip)}
 .s-done{background:var(--done-bg);color:var(--done)}
+.s-cancel{background:#fdf0ef;color:#c0392b}
 .cat-chip{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700}
 .c-crm{background:var(--abg);color:var(--atext)}
 .c-learns{background:#edf7f2;color:#2d9a5f}
@@ -219,7 +220,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
       <div class="week-badge" id="weekLabel"></div>
     </div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWR(null)"><i class="ti ti-plus"></i> 보고서 작성</button>
+      <button class="btn-add" onclick="openWR(null)">보고서 작성</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -227,7 +228,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="wr-list"></div>
       </div>
       <div class="prev-panel" id="wr-prev">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -236,7 +237,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="page" id="page-works-all">
     <div class="page-head"><div class="page-title">📂 All Works</div></div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWork(null,'')"><i class="ti ti-plus"></i> 업무 추가</button>
+      <button class="btn-add" onclick="openWork(null,'')">업무 추가</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -244,7 +245,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="list-all"></div>
       </div>
       <div class="prev-panel" id="prev-all">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -253,7 +254,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="page" id="page-works-crm">
     <div class="page-head"><div class="page-title" style="color:#534AB7">📊 Sales CRM</div></div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWork(null,'Sales CRM')"><i class="ti ti-plus"></i> 업무 추가</button>
+      <button class="btn-add" onclick="openWork(null,'Sales CRM')">업무 추가</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -261,7 +262,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="list-crm"></div>
       </div>
       <div class="prev-panel" id="prev-crm">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -270,7 +271,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="page" id="page-works-learns">
     <div class="page-head"><div class="page-title" style="color:#2d9a5f">📚 Learns</div></div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWork(null,'Learns')"><i class="ti ti-plus"></i> 업무 추가</button>
+      <button class="btn-add" onclick="openWork(null,'Learns')">업무 추가</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -278,7 +279,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="list-learns"></div>
       </div>
       <div class="prev-panel" id="prev-learns">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -287,7 +288,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="page" id="page-works-qa">
     <div class="page-head"><div class="page-title" style="color:#2563c4">✅ QA</div></div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWork(null,'QA')"><i class="ti ti-plus"></i> 업무 추가</button>
+      <button class="btn-add" onclick="openWork(null,'QA')">업무 추가</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -295,7 +296,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="list-qa"></div>
       </div>
       <div class="prev-panel" id="prev-qa">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -304,7 +305,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="page" id="page-works-etc">
     <div class="page-head"><div class="page-title" style="color:#c26a10">🔖 Etc</div></div>
     <div class="page-toolbar">
-      <button class="btn-add" onclick="openWork(null,'Etc')"><i class="ti ti-plus"></i> 업무 추가</button>
+      <button class="btn-add" onclick="openWork(null,'Etc')">업무 추가</button>
     </div>
     <div class="split-wrap">
       <div class="list-panel">
@@ -312,7 +313,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
         <div class="list-body" id="list-etc"></div>
       </div>
       <div class="prev-panel" id="prev-etc">
-        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+        <div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>
       </div>
     </div>
   </div>
@@ -322,25 +323,42 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 <!-- Weekly Report 작성 모달 -->
 <div class="overlay" id="wrWriteOv">
   <div class="modal">
-    <div class="mh"><span class="mh-title" id="wrWriteTitle">주간 보고 작성</span><button class="mclose" onclick="closeWR()"><i class="ti ti-x"></i></button></div>
+    <div class="mh"><span class="mh-title" id="wrWriteTitle">주간 보고 작성</span><button class="mclose" onclick="closeWR()">✕</button></div>
     <div class="mbody">
       <div class="field-row">
         <div class="field"><label>시작일</label><input type="date" id="wf-date-start"/></div>
         <div class="field"><label>종료일</label><input type="date" id="wf-date-end"/></div>
       </div>
-      <div class="field-row">
-        <div class="field"><label>진행률 (%)</label><input type="number" id="wf-progress" min="0" max="100" placeholder="0 ~ 100"/></div>
-        <div class="field"><label>상태</label>
-          <select id="wf-status">
-            <option value="todo">예정</option>
-            <option value="wip">진행 중</option>
-            <option value="done">완료</option>
-            <option value="hold">보류</option>
-          </select>
+      <div class="field">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label style="margin:0">완료</label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="wf-progress-done" min="0" max="100" placeholder="%" style="width:72px;font-size:13px;border-radius:var(--r);border:1px solid var(--border2);padding:4px 8px;outline:none;font-family:inherit;text-align:center"/>
+            <span style="font-size:12px;color:var(--text3)">%</span>
+          </div>
         </div>
+        <textarea id="wf-done" style="min-height:80px" placeholder="이번 주 완료한 업무"></textarea>
       </div>
-      <div class="field"><label>완료 업무</label><textarea id="wf-done" style="min-height:80px" placeholder="이번 주 완료한 업무"></textarea></div>
-      <div class="field"><label>진행 중</label><textarea id="wf-wip" style="min-height:64px" placeholder="현재 진행 중인 업무"></textarea></div>
+      <div class="field">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label style="margin:0">진행 중</label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="wf-progress-wip" min="0" max="100" placeholder="%" style="width:72px;font-size:13px;border-radius:var(--r);border:1px solid var(--border2);padding:4px 8px;outline:none;font-family:inherit;text-align:center"/>
+            <span style="font-size:12px;color:var(--text3)">%</span>
+          </div>
+        </div>
+        <textarea id="wf-wip" style="min-height:64px" placeholder="현재 진행 중인 업무"></textarea>
+      </div>
+      <div class="field">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label style="margin:0">보류</label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="wf-progress-hold" min="0" max="100" placeholder="%" style="width:72px;font-size:13px;border-radius:var(--r);border:1px solid var(--border2);padding:4px 8px;outline:none;font-family:inherit;text-align:center"/>
+            <span style="font-size:12px;color:var(--text3)">%</span>
+          </div>
+        </div>
+        <textarea id="wf-hold" style="min-height:56px" placeholder="보류 중인 업무"></textarea>
+      </div>
       <div class="field"><label>이슈 / 특이사항</label><textarea id="wf-issue" style="min-height:56px" placeholder="문제, 블로커, 이슈"></textarea></div>
       <div class="field"><label>다음 주 계획</label><textarea id="wf-next" style="min-height:64px" placeholder="다음 주 예정 업무"></textarea></div>
     </div>
@@ -353,13 +371,13 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
   <div class="modal">
     <div class="mh">
       <div><div style="font-size:14px;font-weight:700" id="wd-date"></div><div style="font-size:11px;color:var(--text3)" id="wd-week"></div></div>
-      <button class="mclose" onclick="closeWRDetail()"><i class="ti ti-x"></i></button>
+      <button class="mclose" onclick="closeWRDetail()">✕</button>
     </div>
     <div class="mbody">
-      <div class="sec-block"><div class="sec-label" style="color:#2d9a5f"><i class="ti ti-circle-check"></i> 완료 업무</div><div class="sec-content" id="wd-done"></div></div>
-      <div class="sec-block"><div class="sec-label" style="color:#2563c4"><i class="ti ti-loader"></i> 진행 중</div><div class="sec-content" id="wd-wip"></div></div>
-      <div class="sec-block" id="wd-issue-bl"><div class="sec-label" style="color:#c0392b"><i class="ti ti-alert-triangle"></i> 이슈</div><div class="sec-content" id="wd-issue"></div></div>
-      <div class="sec-block"><div class="sec-label" style="color:#c26a10"><i class="ti ti-calendar-event"></i> 다음 주 계획</div><div class="sec-content" id="wd-next"></div></div>
+      <div class="sec-block"><div class="sec-label" style="color:#2d9a5f">완료 업무</div><div class="sec-content" id="wd-done"></div></div>
+      <div class="sec-block"><div class="sec-label" style="color:#2563c4">진행 중</div><div class="sec-content" id="wd-wip"></div></div>
+      <div class="sec-block" id="wd-issue-bl"><div class="sec-label" style="color:#c0392b">이슈</div><div class="sec-content" id="wd-issue"></div></div>
+      <div class="sec-block"><div class="sec-label" style="color:#c26a10">다음 주 계획</div><div class="sec-content" id="wd-next"></div></div>
     </div>
   </div>
 </div>
@@ -367,7 +385,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 <!-- Works 작성 모달 -->
 <div class="overlay" id="workWriteOv">
   <div class="modal wide">
-    <div class="mh"><span class="mh-title" id="workWriteTitle">업무 추가</span><button class="mclose" onclick="closeWork()"><i class="ti ti-x"></i></button></div>
+    <div class="mh"><span class="mh-title" id="workWriteTitle">업무 추가</span><button class="mclose" onclick="closeWork()">✕</button></div>
     <div class="mbody">
       <div class="field-row">
         <div class="field"><label>업무명 *</label><input type="text" id="wo-title" placeholder="업무 제목"/></div>
@@ -383,7 +401,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
       </div>
       <div class="field" id="wo-qa-status-field" style="display:none"><label>QA 상태</label><select id="wo-qa-status"><option value="New">New</option><option value="Closed">Closed</option><option value="Not an Issue">Not an Issue</option><option value="Fix Later">Fix Later</option></select></div>
       <div class="field"><label>날짜</label><input type="date" id="wo-date"/></div>
-      <div class="field"><label><i class="ti ti-brand-slack" style="color:#611f69;font-size:13px;vertical-align:middle;margin-right:3px"></i> 슬랙 링크</label><input type="url" id="wo-slack" placeholder="https://slack.com/..." style="font-size:13px"/></div>
+      <div class="field"><label>슬랙 링크</label><input type="url" id="wo-slack" placeholder="https://slack.com/..." style="font-size:13px"/></div>
       <div class="field">
         <label>내용 / 메모</label>
         <div class="memo-toolbar" id="memo-toolbar">
@@ -401,15 +419,15 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
             <option value="6">32px</option>
           </select>
           <div class="tb-sep"></div>
-          <button type="button" class="tb-btn" title="왼쪽 정렬" onclick="tbCmd('justifyLeft')"><i class="ti ti-align-left"></i></button>
-          <button type="button" class="tb-btn" title="가운데 정렬" onclick="tbCmd('justifyCenter')"><i class="ti ti-align-center"></i></button>
-          <button type="button" class="tb-btn" title="오른쪽 정렬" onclick="tbCmd('justifyRight')"><i class="ti ti-align-right"></i></button>
+          <button type="button" class="tb-btn" title="왼쪽 정렬" onclick="tbCmd('justifyLeft')"></button>
+          <button type="button" class="tb-btn" title="가운데 정렬" onclick="tbCmd('justifyCenter')"></button>
+          <button type="button" class="tb-btn" title="오른쪽 정렬" onclick="tbCmd('justifyRight')"></button>
           <div class="tb-sep"></div>
-          <button type="button" class="tb-btn" title="형식 지우기" onclick="tbCmd('removeFormat')"><i class="ti ti-clear-formatting"></i></button>
+          <button type="button" class="tb-btn" title="형식 지우기" onclick="tbCmd('removeFormat')"></button>
         </div>
         <div id="wo-desc" class="wo-desc-editor" contenteditable="true" data-placeholder="내용을 자유롭게 적어요" style="min-height:200px" oninput="updateTbState()" onkeyup="updateTbState()" onmouseup="updateTbState()"></div>
       </div>
-      <label class="img-upload-btn" for="wo-img-input"><i class="ti ti-photo-plus"></i> 이미지 추가</label>
+      <label class="img-upload-btn" for="wo-img-input">이미지 추가</label>
       <input type="file" id="wo-img-input" accept="image/*" multiple style="display:none"/>
       <div class="img-preview-area" id="wo-img-preview"></div>
     </div>
@@ -418,7 +436,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 </div>
 
 <div class="lightbox" id="lightbox" onclick="closeLB()">
-  <button class="lb-close" onclick="closeLB()"><i class="ti ti-x"></i></button>
+  <button class="lb-close" onclick="closeLB()">✕</button>
   <img id="lb-img" src="" alt=""/>
 </div>
 
@@ -433,8 +451,8 @@ document.getElementById('weekLabel').textContent=weekLabel();
 
 var CAT_CLS={'Sales CRM':'c-crm','Learns':'c-learns','Learns Teachers':'c-teach','QA':'c-qa','Etc':'c-etc'};
 var CAT_KEY={'Sales CRM':'crm','Learns':'learns','Learns Teachers':'learns','QA':'qa','Etc':'etc'};
-var STATUS_LABEL={todo:'예정',wip:'진행 중',done:'완료',hold:'보류'};
-var STATUS_CLS={todo:'s-todo',wip:'s-wip',done:'s-done',hold:'s-todo'};
+var STATUS_LABEL={todo:'예정',wip:'진행 중',done:'완료',hold:'보류',cancel:'취소'};
+var STATUS_CLS={todo:'s-todo',wip:'s-wip',done:'s-done',hold:'s-todo',cancel:'s-cancel'};
 var WR_COLS=[{key:'todo',label:'예정',cls:'todo'},{key:'wip',label:'진행 중',cls:'wip'},{key:'done',label:'완료',cls:'done'},{key:'hold',label:'보류',cls:'hold'}];
 var QA_STATUS_CLS={'New':'qa-new','Closed':'qa-closed','Not an Issue':'qa-notissue','Fix Later':'qa-fixlater'};
 function toggleQAStatus(){var isQA=document.getElementById('wo-cat').value==='QA';document.getElementById('wo-qa-status-field').style.display=isQA?'':'none';}
@@ -468,8 +486,8 @@ var STATUS_COLOR={todo:'var(--todo)',wip:'var(--wip)',done:'var(--done)',hold:'v
 function renderWR(){
   var el=document.getElementById('wr-list');if(!el)return;
   if(!wrList.length){
-    el.innerHTML='<div class="empty"><i class="ti ti-clipboard"></i>작성된 보고서가 없어요.</div>';
-    document.getElementById('wr-prev').innerHTML='<div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';
+    el.innerHTML='<div class="empty">작성된 보고서가 없어요.</div>';
+    document.getElementById('wr-prev').innerHTML='<div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>';
     return;
   }
   el.innerHTML=wrList.map(function(r){
@@ -494,21 +512,22 @@ function selWR(id){
 
 function showWRPreview(id){
   var panel=document.getElementById('wr-prev');if(!panel)return;
-  if(!id){panel.innerHTML='<div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';return;}
+  if(!id){panel.innerHTML='<div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>';return;}
   var r=wrList.find(function(x){return x.id===id});if(!r)return;
   var scls=STATUS_CLS[r.status||'todo'];
   var slabel=STATUS_LABEL[r.status||'todo'];
-  var prog=r.progress!=null&&r.progress!==''?'<span style="font-size:12px;font-weight:700;color:#fff;background:var(--accent);padding:1px 8px;border-radius:4px;">'+r.progress+'%</span>':'';
+  var progBadge=function(p,color){return p!=null&&p!==''?'<span style="font-size:11px;font-weight:700;color:#fff;background:'+color+';padding:1px 7px;border-radius:4px;margin-left:6px;">'+p+'%</span>':''};
   panel.innerHTML='<div class="prev-content">'
     +'<div class="prev-header">'
     +'<div><div class="prev-title">'+r.wl+'</div>'
-    +'<div class="prev-meta"><span class="status-chip '+scls+'">'+slabel+'</span>'+prog+'<span>'+r.date+'</span></div></div>'
-    +'<div class="prev-actions"><button class="btn-sm" onclick="openWR('+r.id+')"><i class="ti ti-edit"></i> 수정</button><button class="btn-sm del" onclick="delWR('+r.id+')"><i class="ti ti-trash"></i> 삭제</button></div>'
+    +'<div class="prev-meta"><span class="status-chip '+scls+'">'+slabel+'</span><span>'+r.date+'</span></div></div>'
+    +'<div class="prev-actions"><button class="btn-sm" onclick="openWR('+r.id+')">수정</button><button class="btn-sm del" onclick="delWR('+r.id+')">삭제</button></div>'
     +'</div>'
-    +(r.done?'<div class="sec-block"><div class="sec-label" style="color:#2d9a5f"><i class="ti ti-circle-check"></i> 완료 업무</div><div class="sec-content">'+r.done+'</div></div>':'')
-    +(r.wip?'<div class="sec-block"><div class="sec-label" style="color:#2563c4"><i class="ti ti-loader"></i> 진행 중</div><div class="sec-content">'+r.wip+'</div></div>':'')
-    +((r.issue&&r.issue!=='없음')?'<div class="sec-block"><div class="sec-label" style="color:#c0392b"><i class="ti ti-alert-triangle"></i> 이슈 / 특이사항</div><div class="sec-content">'+r.issue+'</div></div>':'')
-    +(r.next?'<div class="sec-block"><div class="sec-label" style="color:#c26a10"><i class="ti ti-calendar-event"></i> 다음 주 계획</div><div class="sec-content">'+r.next+'</div></div>':'')
+    +(r.done?'<div class="sec-block"><div class="sec-label" style="color:#2d9a5f">완료'+progBadge(r.progressDone,'#2d9a5f')+'</div><div class="sec-content">'+r.done+'</div></div>':'')
+    +(r.wip?'<div class="sec-block"><div class="sec-label" style="color:#2563c4">진행 중'+progBadge(r.progressWip,'#2563c4')+'</div><div class="sec-content">'+r.wip+'</div></div>':'')
+    +(r.hold?'<div class="sec-block"><div class="sec-label" style="color:var(--hold)">보류'+progBadge(r.progressHold,'var(--hold)')+'</div><div class="sec-content">'+r.hold+'</div></div>':'')
+    +((r.issue&&r.issue!=='없음')?'<div class="sec-block"><div class="sec-label" style="color:#c0392b">이슈 / 특이사항</div><div class="sec-content">'+r.issue+'</div></div>':'')
+    +(r.next?'<div class="sec-block"><div class="sec-label" style="color:#c26a10">다음 주 계획</div><div class="sec-content">'+r.next+'</div></div>':'')
     +'</div>';
 }
 
@@ -517,27 +536,28 @@ function openWR(id,def){
   document.getElementById('wrWriteTitle').textContent=id?'주간 보고 수정':'주간 보고 작성';
   if(id){
     var r=wrList.find(function(x){return x.id===id});
-    // 날짜 파싱
     var wlParts=r.wl?r.wl.split(' ~ '):['',''];
     document.getElementById('wf-date-start').value=wlParts[0]||r.date||todayStr();
     document.getElementById('wf-date-end').value=wlParts[1]||'';
-    document.getElementById('wf-progress').value=r.progress!=null?r.progress:'';
-    document.getElementById('wf-status').value=r.status||'todo';
+    
     document.getElementById('wf-done').value=r.done||'';
     document.getElementById('wf-wip').value=r.wip||'';
+    document.getElementById('wf-hold').value=r.hold||'';
     document.getElementById('wf-issue').value=r.issue=='없음'?'':r.issue||'';
     document.getElementById('wf-next').value=r.next||'';
+    document.getElementById('wf-progress-done').value=r.progressDone!=null?r.progressDone:'';
+    document.getElementById('wf-progress-wip').value=r.progressWip!=null?r.progressWip:'';
+    document.getElementById('wf-progress-hold').value=r.progressHold!=null?r.progressHold:'';
   } else {
-    // 이번 주 월~일 자동 세팅
     var n=new Date(),dow=(n.getDay()+6)%7,mon=new Date(n);
     mon.setDate(n.getDate()-dow);
     var sun=new Date(mon);sun.setDate(mon.getDate()+6);
     var fmt=function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
     document.getElementById('wf-date-start').value=fmt(mon);
     document.getElementById('wf-date-end').value=fmt(sun);
-    ['done','wip','issue','next'].forEach(function(f){document.getElementById('wf-'+f).value=''});
-    document.getElementById('wf-progress').value='';
-    document.getElementById('wf-status').value=def||'todo';
+    ['done','wip','hold','issue','next'].forEach(function(f){document.getElementById('wf-'+f).value=''});
+    ['wf-progress-done','wf-progress-wip','wf-progress-hold'].forEach(function(id){document.getElementById(id).value=''});
+    
   }
   document.getElementById('wrWriteOv').classList.add('open');
 }
@@ -546,8 +566,21 @@ function saveWR(){
   var ds=document.getElementById('wf-date-start').value;
   var de=document.getElementById('wf-date-end').value;
   var wl=ds&&de?ds+' ~ '+de:ds||todayStr();
-  var done=document.getElementById('wf-done').value.trim();
-  var entry={id:wrEdit||wrNextId++,date:ds||todayStr(),wl:wl,status:document.getElementById('wf-status').value,progress:document.getElementById('wf-progress').value!==''?parseInt(document.getElementById('wf-progress').value):null,done:done,wip:document.getElementById('wf-wip').value.trim(),issue:document.getElementById('wf-issue').value.trim()||'없음',next:document.getElementById('wf-next').value.trim()};
+  var pDone=document.getElementById('wf-progress-done').value;
+  var pWip=document.getElementById('wf-progress-wip').value;
+  var pHold=document.getElementById('wf-progress-hold').value;
+  var entry={
+    id:wrEdit||wrNextId++,date:ds||todayStr(),wl:wl,
+    status:'done',
+    done:document.getElementById('wf-done').value.trim(),
+    wip:document.getElementById('wf-wip').value.trim(),
+    hold:document.getElementById('wf-hold').value.trim(),
+    issue:document.getElementById('wf-issue').value.trim()||'없음',
+    next:document.getElementById('wf-next').value.trim(),
+    progressDone:pDone!==''?parseInt(pDone):null,
+    progressWip:pWip!==''?parseInt(pWip):null,
+    progressHold:pHold!==''?parseInt(pHold):null
+  };
   if(wrEdit){var i=wrList.findIndex(function(x){return x.id===wrEdit});if(i>-1)wrList[i]=entry}else{wrList.unshift(entry)}
   wrSel=entry.id;
   saveLS('cw-wr',wrList);closeWR();renderWR();
@@ -571,7 +604,7 @@ function renderWorkList(key){
 }
 function renderList(key, list){
   var el=document.getElementById('list-'+key);if(!el)return;
-  if(!list.length){el.innerHTML='<div class="empty"><i class="ti ti-clipboard"></i>등록된 업무가 없어요.</div>';return}
+  if(!list.length){el.innerHTML='<div class="empty">등록된 업무가 없어요.</div>';return}
   el.innerHTML=list.map(function(w){
     var sel=wkSel[key]===w.id;
     return '<div class="list-item'+(sel?' sel':'')+'" onclick="selWork(\''+key+'\','+w.id+')">'
@@ -590,7 +623,7 @@ function selWork(key, id){
 }
 function showPreview(key, id){
   var panel=document.getElementById('prev-'+key);if(!panel)return;
-  if(!id){panel.innerHTML='<div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';return}
+  if(!id){panel.innerHTML='<div class="prev-empty">항목을 선택하면 내용이 표시돼요</div>';return}
   var w=wkList.find(function(x){return x.id===id});if(!w)return;
   var wrap=document.createElement('div');wrap.className='prev-content';
   var hd=document.createElement('div');hd.className='prev-header';
@@ -606,14 +639,14 @@ function showPreview(key, id){
     var slackBtn=document.createElement('a');
     slackBtn.href=w.slack;slackBtn.target='_blank';slackBtn.rel='noopener noreferrer';
     slackBtn.className='btn-sm';
-    slackBtn.innerHTML='<i class="ti ti-brand-slack" style="color:#611f69"></i> 슬랙 열기';
+    slackBtn.innerHTML='슬랙 열기';
     slackBtn.style.cssText='text-decoration:none;display:inline-flex;align-items:center;gap:3px;';
     mEl.appendChild(slackBtn);
   }
   tBlock.appendChild(tEl);tBlock.appendChild(mEl);
   var acts=document.createElement('div');acts.className='prev-actions';
-  var eBtn=document.createElement('button');eBtn.className='btn-sm';eBtn.innerHTML='<i class="ti ti-edit"></i> 수정';eBtn.onclick=function(){openWork(w.id,w.cat)};
-  var dBtn=document.createElement('button');dBtn.className='btn-sm del';dBtn.innerHTML='<i class="ti ti-trash"></i> 삭제';dBtn.onclick=function(){delWork(w.id,key)};
+  var eBtn=document.createElement('button');eBtn.className='btn-sm';eBtn.innerHTML='수정';eBtn.onclick=function(){openWork(w.id,w.cat)};
+  var dBtn=document.createElement('button');dBtn.className='btn-sm del';dBtn.innerHTML='삭제';dBtn.onclick=function(){delWork(w.id,key)};
   acts.appendChild(eBtn);acts.appendChild(dBtn);
   hd.appendChild(tBlock);hd.appendChild(acts);wrap.appendChild(hd);
   var body=document.createElement('div');body.className='prev-body';body.innerHTML=w.desc||'내용 없음';
