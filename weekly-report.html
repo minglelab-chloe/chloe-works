@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;font-family:'Nanum Gothic',-apple-system,sans-serif}
 :root{
   --sw:220px;
   --bg:#fff;--bg2:#f9f9f8;--bg3:#f1f0ee;--bg4:#e9e8e5;
@@ -158,6 +158,18 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 .memo-title-input::placeholder{color:var(--text3);font-weight:400}
 .memo-editor{width:100%;min-height:200px;font-size:14px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--text);padding:12px 14px;outline:none;resize:vertical;line-height:1.8;font-family:inherit}
 .memo-editor:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(83,74,183,.08)}
+/* ── 메모 툴바 ── */
+.memo-toolbar{display:flex;align-items:center;gap:4px;padding:6px 8px;border:1px solid var(--border2);border-bottom:none;border-radius:var(--r) var(--r) 0 0;background:var(--bg);flex-wrap:wrap}
+.memo-toolbar + .wo-desc-editor{border-radius:0 0 var(--r) var(--r)}
+.tb-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid transparent;border-radius:4px;background:transparent;cursor:pointer;color:var(--text2);font-size:13px;font-family:inherit;transition:background .1s,border-color .1s;flex-shrink:0}
+.tb-btn:hover{background:var(--bg3);border-color:var(--border2);color:var(--text)}
+.tb-btn.active{background:var(--abg);border-color:rgba(83,74,183,.3);color:var(--atext)}
+.tb-sep{width:1px;height:18px;background:var(--border2);margin:0 2px;flex-shrink:0}
+.tb-size-select{font-size:12px;border:1px solid var(--border2);border-radius:4px;background:var(--bg);color:var(--text2);padding:2px 4px;cursor:pointer;font-family:inherit;height:28px;outline:none}
+.tb-size-select:focus{border-color:var(--accent)}
+.wo-desc-editor{width:100%;min-height:200px;font-size:14px;border-radius:0 0 var(--r) var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--text);padding:12px 14px;outline:none;line-height:1.8;font-family:inherit;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.wo-desc-editor:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(83,74,183,.08)}
+.wo-desc-editor:empty::before{content:attr(data-placeholder);color:var(--text3);pointer-events:none}
 .img-upload-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 12px;border-radius:var(--r);border:1px dashed var(--border2);background:transparent;color:var(--text3);cursor:pointer;margin-top:10px;transition:background .1s}
 .img-upload-btn:hover{background:var(--bg2);color:var(--text2)}
 .img-preview-area{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -353,7 +365,31 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
           </select>
         </div>
       </div>
-      <div class="field"><label>내용 / 메모</label><textarea id="wo-desc" style="min-height:200px" placeholder="내용을 자유롭게 적어요"></textarea></div>
+      <div class="field">
+        <label>내용 / 메모</label>
+        <div class="memo-toolbar" id="memo-toolbar">
+          <button type="button" class="tb-btn" id="tb-bold" title="굵게 (Ctrl+B)" onclick="tbCmd('bold')"><b>B</b></button>
+          <button type="button" class="tb-btn" id="tb-italic" title="기울임 (Ctrl+I)" onclick="tbCmd('italic')"><i>I</i></button>
+          <button type="button" class="tb-btn" id="tb-underline" title="밑줄 (Ctrl+U)" onclick="tbCmd('underline')"><u>U</u></button>
+          <div class="tb-sep"></div>
+          <select class="tb-size-select" id="tb-size" title="글자 크기" onchange="tbFontSize(this.value)">
+            <option value="">크기</option>
+            <option value="1">10px</option>
+            <option value="2">13px</option>
+            <option value="3">16px</option>
+            <option value="4">18px</option>
+            <option value="5">24px</option>
+            <option value="6">32px</option>
+          </select>
+          <div class="tb-sep"></div>
+          <button type="button" class="tb-btn" title="왼쪽 정렬" onclick="tbCmd('justifyLeft')"><i class="ti ti-align-left"></i></button>
+          <button type="button" class="tb-btn" title="가운데 정렬" onclick="tbCmd('justifyCenter')"><i class="ti ti-align-center"></i></button>
+          <button type="button" class="tb-btn" title="오른쪽 정렬" onclick="tbCmd('justifyRight')"><i class="ti ti-align-right"></i></button>
+          <div class="tb-sep"></div>
+          <button type="button" class="tb-btn" title="형식 지우기" onclick="tbCmd('removeFormat')"><i class="ti ti-clear-formatting"></i></button>
+        </div>
+        <div id="wo-desc" class="wo-desc-editor" contenteditable="true" data-placeholder="내용을 자유롭게 적어요" style="min-height:200px" oninput="updateTbState()" onkeyup="updateTbState()" onmouseup="updateTbState()"></div>
+      </div>
       <label class="img-upload-btn" for="wo-img-input"><i class="ti ti-photo-plus"></i> 이미지 추가</label>
       <input type="file" id="wo-img-input" accept="image/*" multiple style="display:none"/>
       <div class="img-preview-area" id="wo-img-preview"></div>
@@ -499,7 +535,7 @@ function showPreview(key, id){
   var dBtn=document.createElement('button');dBtn.className='btn-sm del';dBtn.innerHTML='<i class="ti ti-trash"></i> 삭제';dBtn.onclick=function(){delWork(w.id,key)};
   acts.appendChild(eBtn);acts.appendChild(dBtn);
   hd.appendChild(tBlock);hd.appendChild(acts);wrap.appendChild(hd);
-  var body=document.createElement('div');body.className='prev-body';body.textContent=w.desc||'내용 없음';
+  var body=document.createElement('div');body.className='prev-body';body.innerHTML=w.desc||'내용 없음';
   wrap.appendChild(body);
   if(w.imgs&&w.imgs.length){
     var imgWrap=document.createElement('div');imgWrap.className='prev-imgs';
@@ -511,8 +547,8 @@ function showPreview(key, id){
 function openWork(id,cat){
   wkEdit=id;wkImgs=[];
   document.getElementById('workWriteTitle').textContent=id?'업무 수정':'업무 추가';
-  if(id){var w=wkList.find(function(x){return x.id===id});document.getElementById('wo-title').value=w.title||'';document.getElementById('wo-cat').value=w.cat||'Sales CRM';document.getElementById('wo-desc').value=w.desc||'';wkImgs=w.imgs?w.imgs.slice():[];}
-  else{document.getElementById('wo-title').value='';document.getElementById('wo-cat').value=cat||'Sales CRM';document.getElementById('wo-desc').value='';}
+  if(id){var w=wkList.find(function(x){return x.id===id});document.getElementById('wo-title').value=w.title||'';document.getElementById('wo-cat').value=w.cat||'Sales CRM';document.getElementById('wo-desc').innerHTML=w.desc||'';wkImgs=w.imgs?w.imgs.slice():[];}
+  else{document.getElementById('wo-title').value='';document.getElementById('wo-cat').value=cat||'Sales CRM';document.getElementById('wo-desc').innerHTML='';}
   renderWkImgPreview();
   document.getElementById('workWriteOv').classList.add('open');
 }
@@ -530,7 +566,7 @@ function saveWork(){
   var title=document.getElementById('wo-title').value.trim();
   if(!title){alert('업무명은 필수입니다.');return}
   var cat=document.getElementById('wo-cat').value;
-  var entry={id:wkEdit||wkNextId++,title:title,cat:cat,desc:document.getElementById('wo-desc').value.trim(),imgs:wkImgs.slice(),date:todayStr()};
+  var entry={id:wkEdit||wkNextId++,title:title,cat:cat,desc:document.getElementById('wo-desc').innerHTML.trim(),imgs:wkImgs.slice(),date:todayStr()};
   if(wkEdit){var i=wkList.findIndex(function(x){return x.id===wkEdit});if(i>-1)wkList[i]=entry}else{wkList.unshift(entry)}
   saveLS('cw-wk',wkList);
   var key=CAT_KEY[cat]||'etc';
@@ -554,6 +590,30 @@ function delWork(id,key){
 ['wrWriteOv','wrDetailOv','workWriteOv'].forEach(function(id){
   document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
 });
+
+/* ══ 메모 툴바 ══ */
+function tbCmd(cmd){
+  document.getElementById('wo-desc').focus();
+  document.execCommand(cmd,false,null);
+  updateTbState();
+}
+function tbFontSize(val){
+  if(!val)return;
+  document.getElementById('wo-desc').focus();
+  document.execCommand('fontSize',false,val);
+  updateTbState();
+}
+function updateTbState(){
+  var cmds=['bold','italic','underline'];
+  var ids=['tb-bold','tb-italic','tb-underline'];
+  cmds.forEach(function(c,i){
+    var btn=document.getElementById(ids[i]);
+    if(btn){
+      if(document.queryCommandState(c))btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+  });
+}
 
 renderWR();
 </script>
