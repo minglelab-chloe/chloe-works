@@ -323,7 +323,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
           </select>
         </div>
       </div>
-      <div class="field"><label>완료 업무 *</label><textarea id="wf-done" style="min-height:80px" placeholder="이번 주 완료한 업무"></textarea></div>
+      <div class="field"><label>완료 업무</label><textarea id="wf-done" style="min-height:80px" placeholder="이번 주 완료한 업무"></textarea></div>
       <div class="field"><label>진행 중</label><textarea id="wf-wip" style="min-height:64px" placeholder="현재 진행 중인 업무"></textarea></div>
       <div class="field"><label>이슈 / 특이사항</label><textarea id="wf-issue" style="min-height:56px" placeholder="문제, 블로커, 이슈"></textarea></div>
       <div class="field"><label>다음 주 계획</label><textarea id="wf-next" style="min-height:64px" placeholder="다음 주 예정 업무"></textarea></div>
@@ -476,7 +476,6 @@ function openWR(id,def){
 function closeWR(){document.getElementById('wrWriteOv').classList.remove('open');wrEdit=null}
 function saveWR(){
   var done=document.getElementById('wf-done').value.trim();
-  if(!done){alert('완료 업무는 필수입니다.');return}
   var entry={id:wrEdit||wrNextId++,date:todayStr(),wl:weekLabel(),status:document.getElementById('wf-status').value,progress:document.getElementById('wf-progress').value!==''?parseInt(document.getElementById('wf-progress').value):null,done:done,wip:document.getElementById('wf-wip').value.trim(),issue:document.getElementById('wf-issue').value.trim()||'없음',next:document.getElementById('wf-next').value.trim()};
   if(wrEdit){var i=wrList.findIndex(function(x){return x.id===wrEdit});if(i>-1)wrList[i]=entry}else{wrList.unshift(entry)}
   saveLS('cw-wr',wrList);closeWR();renderWR();
