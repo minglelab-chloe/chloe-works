@@ -83,6 +83,10 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
 .c-teach{background:#fdf8e8;color:#a07000}
 .c-qa{background:#eff4fd;color:#2563c4}
 .c-etc{background:var(--bg3);color:var(--text2)}
+.qa-new{background:#fff0f0;color:#c0392b;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700}
+.qa-closed{background:#edf7f2;color:#2d9a5f;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700}
+.qa-notissue{background:#f1f0ee;color:#6b6b66;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700}
+.qa-fixlater{background:#fdf3e8;color:#c26a10;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:700}
 
 /* ── Weekly Report 칸반 ── */
 .wr-kanban-wrap{flex:1;overflow-x:auto;padding:0 32px 32px;display:flex;gap:14px;align-items:flex-start}
@@ -217,7 +221,15 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
     <div class="page-toolbar">
       <button class="btn-add" onclick="openWR(null)"><i class="ti ti-plus"></i> 보고서 작성</button>
     </div>
-    <div class="wr-kanban-wrap" id="wrKanban"></div>
+    <div class="split-wrap">
+      <div class="list-panel">
+        <div class="list-top"><span class="list-top-label">작성 목록</span></div>
+        <div class="list-body" id="wr-list"></div>
+      </div>
+      <div class="prev-panel" id="wr-prev">
+        <div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>
+      </div>
+    </div>
   </div>
 
   <!-- All Works — 전체 목록 -->
@@ -313,6 +325,10 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
     <div class="mh"><span class="mh-title" id="wrWriteTitle">주간 보고 작성</span><button class="mclose" onclick="closeWR()"><i class="ti ti-x"></i></button></div>
     <div class="mbody">
       <div class="field-row">
+        <div class="field"><label>시작일</label><input type="date" id="wf-date-start"/></div>
+        <div class="field"><label>종료일</label><input type="date" id="wf-date-end"/></div>
+      </div>
+      <div class="field-row">
         <div class="field"><label>진행률 (%)</label><input type="number" id="wf-progress" min="0" max="100" placeholder="0 ~ 100"/></div>
         <div class="field"><label>상태</label>
           <select id="wf-status">
@@ -356,7 +372,7 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
       <div class="field-row">
         <div class="field"><label>업무명 *</label><input type="text" id="wo-title" placeholder="업무 제목"/></div>
         <div class="field"><label>카테고리</label>
-          <select id="wo-cat">
+          <select id="wo-cat" onchange="toggleQAStatus()">
             <option value="Sales CRM">Sales CRM</option>
             <option value="Learns">Learns</option>
             <option value="Learns Teachers">Learns Teachers</option>
@@ -365,6 +381,9 @@ body{font-family:'Nanum Gothic',-apple-system,sans-serif;background:var(--bg3);c
           </select>
         </div>
       </div>
+      <div class="field" id="wo-qa-status-field" style="display:none"><label>QA 상태</label><select id="wo-qa-status"><option value="New">New</option><option value="Closed">Closed</option><option value="Not an Issue">Not an Issue</option><option value="Fix Later">Fix Later</option></select></div>
+      <div class="field"><label>날짜</label><input type="date" id="wo-date"/></div>
+      <div class="field"><label><i class="ti ti-brand-slack" style="color:#611f69;font-size:13px;vertical-align:middle;margin-right:3px"></i> 슬랙 링크</label><input type="url" id="wo-slack" placeholder="https://slack.com/..." style="font-size:13px"/></div>
       <div class="field">
         <label>내용 / 메모</label>
         <div class="memo-toolbar" id="memo-toolbar">
@@ -417,6 +436,8 @@ var CAT_KEY={'Sales CRM':'crm','Learns':'learns','Learns Teachers':'learns','QA'
 var STATUS_LABEL={todo:'예정',wip:'진행 중',done:'완료',hold:'보류'};
 var STATUS_CLS={todo:'s-todo',wip:'s-wip',done:'s-done',hold:'s-todo'};
 var WR_COLS=[{key:'todo',label:'예정',cls:'todo'},{key:'wip',label:'진행 중',cls:'wip'},{key:'done',label:'완료',cls:'done'},{key:'hold',label:'보류',cls:'hold'}];
+var QA_STATUS_CLS={'New':'qa-new','Closed':'qa-closed','Not an Issue':'qa-notissue','Fix Later':'qa-fixlater'};
+function toggleQAStatus(){var isQA=document.getElementById('wo-cat').value==='QA';document.getElementById('wo-qa-status-field').style.display=isQA?'':'none';}
 
 /* ── 페이지 전환 ── */
 function showPage(id,el){
@@ -440,47 +461,98 @@ document.querySelector('[onclick*="works-all"]').addEventListener('click',functi
 });
 
 /* ══ WEEKLY REPORT ══ */
-var wrList=loadLS('cw-wr'),wrNextId=wrList.length?Math.max.apply(null,wrList.map(function(r){return r.id}))+1:1,wrEdit=null;
+var wrList=loadLS('cw-wr'),wrNextId=wrList.length?Math.max.apply(null,wrList.map(function(r){return r.id}))+1:1,wrEdit=null,wrSel=null;
+
+var STATUS_COLOR={todo:'var(--todo)',wip:'var(--wip)',done:'var(--done)',hold:'var(--hold)'};
+
 function renderWR(){
-  var wrap=document.getElementById('wrKanban');wrap.innerHTML='';
-  WR_COLS.forEach(function(col){
-    var items=wrList.filter(function(r){return(r.status||'todo')===col.key});
-    var colEl=document.createElement('div');colEl.className='wr-col';
-    var head=document.createElement('div');head.className='wr-col-head '+col.cls;
-    head.innerHTML='<div class="col-label '+col.cls+'"><div class="col-dot"></div>'+col.label+'</div><span class="col-count '+col.cls+'">'+items.length+'</span>';
-    colEl.appendChild(head);
-    var cards=document.createElement('div');cards.className='wr-cards';
-    if(!items.length){cards.innerHTML='<div class="k-empty">없음</div>'}
-    else{items.forEach(function(r){
-      var card=document.createElement('div');card.className='wr-card '+col.cls;
-      var prog=r.progress!=null&&r.progress!==''?'<div class="wr-card-progress">'+r.progress+'%</div>':'';
-      card.innerHTML='<div class="wr-card-date">'+r.date+'</div><div class="wr-card-week">'+r.wl+'</div>'+prog
-        +(r.done?'<div class="wr-sec"><div class="wr-sec-label" style="color:#2d9a5f"><i class="ti ti-circle-check"></i> 완료</div><div class="wr-sec-body">'+r.done+'</div></div>':'')
-        +(r.wip?'<div class="wr-sec"><div class="wr-sec-label" style="color:#2563c4"><i class="ti ti-loader"></i> 진행 중</div><div class="wr-sec-body">'+r.wip+'</div></div>':'')
-        +(r.next?'<div class="wr-sec"><div class="wr-sec-label" style="color:#c26a10"><i class="ti ti-calendar-event"></i> 다음 주</div><div class="wr-sec-body">'+r.next+'</div></div>':'')
-        +'<div class="wr-card-actions"><button class="btn-sm" onclick="openWR('+r.id+')"><i class="ti ti-edit"></i> 수정</button><button class="btn-sm del" onclick="delWR('+r.id+')"><i class="ti ti-trash"></i> 삭제</button></div>';
-      cards.appendChild(card);
-    })}
-    var ab=document.createElement('button');ab.className='col-add-btn';ab.innerHTML='<i class="ti ti-plus"></i> 추가';
-    ab.onclick=function(){openWR(null,col.key)};
-    colEl.appendChild(cards);colEl.appendChild(ab);wrap.appendChild(colEl);
-  });
+  var el=document.getElementById('wr-list');if(!el)return;
+  if(!wrList.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-clipboard"></i>작성된 보고서가 없어요.</div>';
+    document.getElementById('wr-prev').innerHTML='<div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';
+    return;
+  }
+  el.innerHTML=wrList.map(function(r){
+    var sel=wrSel===r.id;
+    var scls=STATUS_CLS[r.status||'todo'];
+    var slabel=STATUS_LABEL[r.status||'todo'];
+    var prog=r.progress!=null&&r.progress!==''?' · '+r.progress+'%':'';
+    return '<div class="list-item'+(sel?' sel':'')+'" onclick="selWR('+r.id+')">'
+      +'<div class="list-item-title">'+r.wl+'</div>'
+      +'<div class="list-item-meta"><span class="status-chip '+scls+'">'+slabel+'</span><span>'+r.date+prog+'</span></div>'
+      +(r.done?'<div class="list-item-preview">'+r.done.replace(/<[^>]*>/g,'').split('\n')[0]+'</div>':'')
+      +'</div>';
+  }).join('');
+  if(wrSel) showWRPreview(wrSel);
 }
+
+function selWR(id){
+  wrSel=id;
+  renderWR();
+  showWRPreview(id);
+}
+
+function showWRPreview(id){
+  var panel=document.getElementById('wr-prev');if(!panel)return;
+  if(!id){panel.innerHTML='<div class="prev-empty"><i class="ti ti-layout-sidebar-right-expand"></i>항목을 선택하면 내용이 표시돼요</div>';return;}
+  var r=wrList.find(function(x){return x.id===id});if(!r)return;
+  var scls=STATUS_CLS[r.status||'todo'];
+  var slabel=STATUS_LABEL[r.status||'todo'];
+  var prog=r.progress!=null&&r.progress!==''?'<span style="font-size:12px;font-weight:700;color:#fff;background:var(--accent);padding:1px 8px;border-radius:4px;">'+r.progress+'%</span>':'';
+  panel.innerHTML='<div class="prev-content">'
+    +'<div class="prev-header">'
+    +'<div><div class="prev-title">'+r.wl+'</div>'
+    +'<div class="prev-meta"><span class="status-chip '+scls+'">'+slabel+'</span>'+prog+'<span>'+r.date+'</span></div></div>'
+    +'<div class="prev-actions"><button class="btn-sm" onclick="openWR('+r.id+')"><i class="ti ti-edit"></i> 수정</button><button class="btn-sm del" onclick="delWR('+r.id+')"><i class="ti ti-trash"></i> 삭제</button></div>'
+    +'</div>'
+    +(r.done?'<div class="sec-block"><div class="sec-label" style="color:#2d9a5f"><i class="ti ti-circle-check"></i> 완료 업무</div><div class="sec-content">'+r.done+'</div></div>':'')
+    +(r.wip?'<div class="sec-block"><div class="sec-label" style="color:#2563c4"><i class="ti ti-loader"></i> 진행 중</div><div class="sec-content">'+r.wip+'</div></div>':'')
+    +((r.issue&&r.issue!=='없음')?'<div class="sec-block"><div class="sec-label" style="color:#c0392b"><i class="ti ti-alert-triangle"></i> 이슈 / 특이사항</div><div class="sec-content">'+r.issue+'</div></div>':'')
+    +(r.next?'<div class="sec-block"><div class="sec-label" style="color:#c26a10"><i class="ti ti-calendar-event"></i> 다음 주 계획</div><div class="sec-content">'+r.next+'</div></div>':'')
+    +'</div>';
+}
+
 function openWR(id,def){
   wrEdit=id;
   document.getElementById('wrWriteTitle').textContent=id?'주간 보고 수정':'주간 보고 작성';
-  if(id){var r=wrList.find(function(x){return x.id===id});document.getElementById('wf-progress').value=r.progress!=null?r.progress:'';document.getElementById('wf-status').value=r.status||'todo';document.getElementById('wf-done').value=r.done||'';document.getElementById('wf-wip').value=r.wip||'';document.getElementById('wf-issue').value=r.issue=='없음'?'':r.issue||'';document.getElementById('wf-next').value=r.next||'';}
-  else{['done','wip','issue','next'].forEach(function(f){document.getElementById('wf-'+f).value=''});document.getElementById('wf-progress').value='';document.getElementById('wf-status').value=def||'todo';}
+  if(id){
+    var r=wrList.find(function(x){return x.id===id});
+    // 날짜 파싱
+    var wlParts=r.wl?r.wl.split(' ~ '):['',''];
+    document.getElementById('wf-date-start').value=wlParts[0]||r.date||todayStr();
+    document.getElementById('wf-date-end').value=wlParts[1]||'';
+    document.getElementById('wf-progress').value=r.progress!=null?r.progress:'';
+    document.getElementById('wf-status').value=r.status||'todo';
+    document.getElementById('wf-done').value=r.done||'';
+    document.getElementById('wf-wip').value=r.wip||'';
+    document.getElementById('wf-issue').value=r.issue=='없음'?'':r.issue||'';
+    document.getElementById('wf-next').value=r.next||'';
+  } else {
+    // 이번 주 월~일 자동 세팅
+    var n=new Date(),dow=(n.getDay()+6)%7,mon=new Date(n);
+    mon.setDate(n.getDate()-dow);
+    var sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    var fmt=function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+    document.getElementById('wf-date-start').value=fmt(mon);
+    document.getElementById('wf-date-end').value=fmt(sun);
+    ['done','wip','issue','next'].forEach(function(f){document.getElementById('wf-'+f).value=''});
+    document.getElementById('wf-progress').value='';
+    document.getElementById('wf-status').value=def||'todo';
+  }
   document.getElementById('wrWriteOv').classList.add('open');
 }
 function closeWR(){document.getElementById('wrWriteOv').classList.remove('open');wrEdit=null}
 function saveWR(){
+  var ds=document.getElementById('wf-date-start').value;
+  var de=document.getElementById('wf-date-end').value;
+  var wl=ds&&de?ds+' ~ '+de:ds||todayStr();
   var done=document.getElementById('wf-done').value.trim();
-  var entry={id:wrEdit||wrNextId++,date:todayStr(),wl:weekLabel(),status:document.getElementById('wf-status').value,progress:document.getElementById('wf-progress').value!==''?parseInt(document.getElementById('wf-progress').value):null,done:done,wip:document.getElementById('wf-wip').value.trim(),issue:document.getElementById('wf-issue').value.trim()||'없음',next:document.getElementById('wf-next').value.trim()};
+  var entry={id:wrEdit||wrNextId++,date:ds||todayStr(),wl:wl,status:document.getElementById('wf-status').value,progress:document.getElementById('wf-progress').value!==''?parseInt(document.getElementById('wf-progress').value):null,done:done,wip:document.getElementById('wf-wip').value.trim(),issue:document.getElementById('wf-issue').value.trim()||'없음',next:document.getElementById('wf-next').value.trim()};
   if(wrEdit){var i=wrList.findIndex(function(x){return x.id===wrEdit});if(i>-1)wrList[i]=entry}else{wrList.unshift(entry)}
+  wrSel=entry.id;
   saveLS('cw-wr',wrList);closeWR();renderWR();
 }
-function delWR(id){if(!confirm('삭제할까요?'))return;wrList=wrList.filter(function(x){return x.id!==id});saveLS('cw-wr',wrList);renderWR()}
+function delWR(id){if(!confirm('삭제할까요?'))return;wrList=wrList.filter(function(x){return x.id!==id});wrSel=wrList.length?wrList[0].id:null;saveLS('cw-wr',wrList);renderWR()}
 function closeWRDetail(){document.getElementById('wrDetailOv').classList.remove('open')}
 
 /* ══ WORKS ══ */
@@ -504,7 +576,7 @@ function renderList(key, list){
     var sel=wkSel[key]===w.id;
     return '<div class="list-item'+(sel?' sel':'')+'" onclick="selWork(\''+key+'\','+w.id+')">'
       +'<div class="list-item-title">'+w.title+'</div>'
-      +'<div class="list-item-meta"><span class="cat-chip '+(CAT_CLS[w.cat]||'c-etc')+'">'+w.cat+'</span><span>'+w.date+'</span></div>'
+      +'<div class="list-item-meta"><span class="cat-chip '+(CAT_CLS[w.cat]||'c-etc')+'">'+w.cat+'</span>'+(w.cat==='QA'&&w.qaStatus?'<span class="'+(QA_STATUS_CLS[w.qaStatus]||'qa-new')+'">'+w.qaStatus+'</span>':'')+'<span>'+w.date+'</span></div>'
       +(w.desc?'<div class="list-item-preview">'+w.desc.replace(/<[^>]*>/g,'').split('\n')[0]+'</div>':'')
       +'</div>'
   }).join('');
@@ -527,7 +599,17 @@ function showPreview(key, id){
   var mEl=document.createElement('div');mEl.className='prev-meta';
   var chip=document.createElement('span');chip.className='cat-chip '+(CAT_CLS[w.cat]||'c-etc');chip.textContent=w.cat;
   var dEl=document.createElement('span');dEl.textContent=w.date;
-  mEl.appendChild(chip);mEl.appendChild(dEl);
+  mEl.appendChild(chip);
+  if(w.cat==='QA'&&w.qaStatus){var qBadge=document.createElement('span');qBadge.className=QA_STATUS_CLS[w.qaStatus]||'qa-new';qBadge.textContent=w.qaStatus;mEl.appendChild(qBadge);}
+  mEl.appendChild(dEl);
+  if(w.slack){
+    var slackBtn=document.createElement('a');
+    slackBtn.href=w.slack;slackBtn.target='_blank';slackBtn.rel='noopener noreferrer';
+    slackBtn.className='btn-sm';
+    slackBtn.innerHTML='<i class="ti ti-brand-slack" style="color:#611f69"></i> 슬랙 열기';
+    slackBtn.style.cssText='text-decoration:none;display:inline-flex;align-items:center;gap:3px;';
+    mEl.appendChild(slackBtn);
+  }
   tBlock.appendChild(tEl);tBlock.appendChild(mEl);
   var acts=document.createElement('div');acts.className='prev-actions';
   var eBtn=document.createElement('button');eBtn.className='btn-sm';eBtn.innerHTML='<i class="ti ti-edit"></i> 수정';eBtn.onclick=function(){openWork(w.id,w.cat)};
@@ -546,8 +628,8 @@ function showPreview(key, id){
 function openWork(id,cat){
   wkEdit=id;wkImgs=[];
   document.getElementById('workWriteTitle').textContent=id?'업무 수정':'업무 추가';
-  if(id){var w=wkList.find(function(x){return x.id===id});document.getElementById('wo-title').value=w.title||'';document.getElementById('wo-cat').value=w.cat||'Sales CRM';document.getElementById('wo-desc').innerHTML=w.desc||'';wkImgs=w.imgs?w.imgs.slice():[];}
-  else{document.getElementById('wo-title').value='';document.getElementById('wo-cat').value=cat||'Sales CRM';document.getElementById('wo-desc').innerHTML='';}
+  if(id){var w=wkList.find(function(x){return x.id===id});document.getElementById('wo-title').value=w.title||'';document.getElementById('wo-cat').value=w.cat||'Sales CRM';document.getElementById('wo-date').value=w.date||todayStr();document.getElementById('wo-slack').value=w.slack||'';document.getElementById('wo-qa-status').value=w.qaStatus||'New';document.getElementById('wo-qa-status-field').style.display=w.cat==='QA'?'':'none';document.getElementById('wo-desc').innerHTML=w.desc||'';wkImgs=w.imgs?w.imgs.slice():[];}
+  else{document.getElementById('wo-title').value='';document.getElementById('wo-cat').value=cat||'Sales CRM';document.getElementById('wo-date').value=todayStr();document.getElementById('wo-slack').value='';document.getElementById('wo-qa-status').value='New';document.getElementById('wo-qa-status-field').style.display=cat==='QA'?'':'none';document.getElementById('wo-desc').innerHTML='';}
   renderWkImgPreview();
   document.getElementById('workWriteOv').classList.add('open');
 }
@@ -565,7 +647,7 @@ function saveWork(){
   var title=document.getElementById('wo-title').value.trim();
   if(!title){alert('업무명은 필수입니다.');return}
   var cat=document.getElementById('wo-cat').value;
-  var entry={id:wkEdit||wkNextId++,title:title,cat:cat,desc:document.getElementById('wo-desc').innerHTML.trim(),imgs:wkImgs.slice(),date:todayStr()};
+  var entry={id:wkEdit||wkNextId++,title:title,cat:cat,desc:document.getElementById('wo-desc').innerHTML.trim(),imgs:wkImgs.slice(),date:document.getElementById('wo-date').value||todayStr(),slack:document.getElementById('wo-slack').value.trim(),qaStatus:cat==='QA'?document.getElementById('wo-qa-status').value:''};
   if(wkEdit){var i=wkList.findIndex(function(x){return x.id===wkEdit});if(i>-1)wkList[i]=entry}else{wkList.unshift(entry)}
   saveLS('cw-wk',wkList);
   var key=CAT_KEY[cat]||'etc';
