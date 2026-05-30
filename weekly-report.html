@@ -702,7 +702,7 @@ function delWork(id,key){
 }
 
 ['wrWriteOv','wrDetailOv','workWriteOv'].forEach(function(id){
-  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+  // 바깥 클릭으로 닫기 비활성화
 });
 
 /* ══ 메모 툴바 ══ */
