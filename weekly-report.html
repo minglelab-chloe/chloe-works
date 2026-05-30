@@ -702,7 +702,12 @@ function delWork(id,key){
 }
 
 ['wrWriteOv','wrDetailOv','workWriteOv'].forEach(function(id){
-  // 바깥 클릭으로 닫기 비활성화
+  var ov=document.getElementById(id);
+  // 모달 내부 클릭 시 이벤트 전파 차단
+  var modal=ov.querySelector('.modal');
+  if(modal) modal.addEventListener('click',function(e){e.stopPropagation()});
+  // 오버레이(배경) 클릭해도 닫히지 않게
+  ov.addEventListener('click',function(e){e.stopPropagation()});
 });
 
 /* ══ 메모 툴바 ══ */
